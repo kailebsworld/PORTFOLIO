@@ -1,0 +1,291 @@
+:root{
+  --bg:#000;
+  --fg:#fff;
+
+  /* layout */
+  --wrap: 1340px;
+  --pad: 50px;
+
+  /* hero positioning (tweak these if needed) */
+  --hello-left: 50px;
+  --hello-top: 160px;
+
+  --years-left: 50px;
+  --years-top: 170px;
+
+  --bgwords-right: 50px;
+  --bgwords-top: 140px;
+
+  --name-left: 235px;
+  --name-top: 390px;
+  --name-width: 1160px;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  overflow-x:hidden;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.wrap{
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* kill default blue/underline globally */
+a{
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ================= HEADER ================= */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 78px;
+  border-bottom: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(10px);
+}
+
+.header-inner{
+  height: 78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 28px;
+}
+
+/* If the PNG fails, this prevents the ugly blue “K” fallback */
+.logo{
+  display:block;
+  line-height:0;
+  text-decoration:none;
+  color: transparent;          /* hides fallback text if image fails */
+}
+
+.logo img{
+  display:block;
+  height: 28px;                /* match Figma scale */
+  width:auto;
+  image-rendering: pixelated;
+}
+
+/* centered nav */
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 28px;
+  flex: 1;
+}
+
+.nav-link{
+  font-size: 18px;
+  letter-spacing: .02em;
+  opacity: .35;
+  transition: opacity .2s ease;
+}
+
+.nav-link:hover{ opacity:.75; }
+.nav-link.is-active{ opacity:1; }
+
+/* right connect */
+.connect{
+  display:inline-flex;
+  align-items:center;
+  gap: 10px;
+  font-size: 18px;
+  border-bottom: 1px solid rgba(255,255,255,1);
+  padding-bottom: 6px;
+}
+
+.arrow{ font-size: 18px; }
+
+/* ================= HERO ================= */
+.hero{
+  position: relative;
+  min-height: 720px;
+  padding-top: 30px;
+}
+
+/* vignette + soft glow like your comp */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  background:
+    radial-gradient(1000px 520px at 50% 30%, rgba(255,255,255,.08), transparent 65%),
+    radial-gradient(900px 700px at 15% 40%, rgba(255,255,255,.06), transparent 62%),
+    radial-gradient(900px 700px at 85% 40%, rgba(255,255,255,.06), transparent 62%),
+    linear-gradient(to bottom, rgba(0,0,0,.0) 0%, rgba(0,0,0,.5) 100%);
+  pointer-events:none;
+}
+
+.hero-inner{
+  position: relative;
+  height: 680px;
+}
+
+/* (2026) stack */
+.years{
+  position:absolute;
+  left: var(--years-left);
+  top: var(--years-top);
+  width: 320px;
+  z-index: 1;
+  opacity: .65;
+  pointer-events:none;
+  user-select:none;
+
+  /* fade out bottom like the comp */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
+}
+
+.years p{
+  margin: 0;
+  font-size: 98px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: rgba(255,255,255,.40);
+  line-height: 0.88; /* overlap like your comp */
+  text-shadow: 0 8px 40px rgba(0,0,0,.65);
+}
+
+/* GRAPHICS • UI/UX background */
+.bg-words{
+  position:absolute;
+  right: var(--bgwords-right);
+  top: var(--bgwords-top);
+  z-index: 0;
+
+  font-size: 92px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.20);
+  text-shadow: 0 10px 60px rgba(0,0,0,.75);
+
+  pointer-events:none;
+  user-select:none;
+}
+
+/* Hello box */
+.hello-box{
+  position:absolute;
+  left: var(--hello-left);
+  top: var(--hello-top);
+  z-index: 3;
+
+  border: 3px solid rgba(255,255,255,1);
+  padding: 28px 34px;
+  background: transparent;
+}
+
+.hello-text{
+  font-size: 100px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hello-script{
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  margin-right: 12px;
+}
+
+.caret{
+  opacity: .25;
+  margin-left: 10px;
+}
+
+/* Figma handle squares (corners) */
+.handle{
+  position:absolute;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+}
+
+.h-tl{ left:-10px; top:-10px; }
+.h-tr{ right:-10px; top:-10px; }
+.h-bl{ left:-10px; bottom:-10px; }
+.h-br{ right:-10px; bottom:-10px; }
+
+/* Cursor icon (white outline pointer) */
+.cursor-icon{
+  position:absolute;
+  left: 560px;
+  top: 330px;
+  width: 54px;
+  height: 54px;
+  z-index: 4;
+  opacity: .95;
+  pointer-events:none;
+  background-repeat:no-repeat;
+  background-size:contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M14 8 L52 34 L34 38 L40 54 L34 56 L28 40 L18 50 Z' fill='%23000'/%3E%3Cpath d='M14 8 L52 34 L34 38 L40 54 L34 56 L28 40 L18 50 Z' fill='none' stroke='%23fff' stroke-width='4' stroke-linejoin='miter'/%3E%3C/svg%3E");
+}
+
+/* Big pixel Kaileb PNG */
+.name-img{
+  position:absolute;
+  left: var(--name-left);
+  top: var(--name-top);
+  width: var(--name-width);
+  height: auto;
+
+  image-rendering: pixelated;
+  z-index: 2;
+
+  pointer-events:none;
+  user-select:none;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1100px){
+  :root{
+    --pad: 24px;
+    --hello-left: 0px;
+    --hello-top: 30px;
+    --name-left: 0px;
+    --name-top: 0px;
+    --name-width: 680px;
+  }
+
+  .nav{ display:none; }
+  .bg-words{ display:none; }
+  .years{ display:none; }
+
+  .hero-inner{
+    height: auto;
+    padding-bottom: 60px;
+  }
+
+  .hello-box{
+    position: relative;
+    left: 0;
+    top: 0;
+  }
+
+  .hello-text{ font-size: 56px; }
+
+  .name-img{
+    position: relative;
+    left: 0;
+    top: 0;
+    width: min(100%, var(--name-width));
+    margin-top: 22px;
+  }
+
+  .cursor-icon{ display:none; }
+}
