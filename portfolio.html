@@ -6,15 +6,12 @@
   <title>Kaileb — Portfolio</title>
 
   <link rel="stylesheet" href="styles/styles.css" />
-
-  <!-- Fonts for the coded type (Hello) + nav -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
 
 <body id="top">
-  <!-- HEADER -->
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="logo" href="#top" aria-label="Home">
@@ -29,54 +26,227 @@
       </nav>
 
       <a class="connect" href="#contact">
-        Let’s Connect <span class="arrow" aria-hidden="true">↗</span>
+        Let's Connect <span class="arrow" aria-hidden="true">↗</span>
       </a>
     </div>
   </header>
 
-  <!-- MAIN / HERO -->
   <main>
+    <!-- HERO -->
     <section class="hero">
       <div class="wrap hero-inner">
-
-        <!-- LEFT: (2026) x4 -->
         <div class="years" aria-hidden="true">
-          <p>(2026)</p>
-          <p>(2026)</p>
-          <p>(2026)</p>
-          <p>(2026)</p>
+          <p>(2026)</p><p>(2026)</p><p>(2026)</p><p>(2026)</p>
         </div>
 
-        <!-- RIGHT: GRAPHICS • UI/UX x4 -->
         <div class="bg-words" aria-hidden="true">
-          <div>GRAPHICS • UI/UX</div>
-          <div>GRAPHICS • UI/UX</div>
-          <div>GRAPHICS • UI/UX</div>
-          <div>GRAPHICS • UI/UX</div>
+          <div>GRAPHICS • UI/UX</div><div>GRAPHICS • UI/UX</div><div>GRAPHICS • UI/UX</div><div>GRAPHICS • UI/UX</div>
         </div>
 
-        <!-- HELLO BOX -->
         <div class="hello-box">
           <div class="hello-text">
-            <span class="hello-script">Hello</span>, I’m<span class="caret">|</span>
+            <span class="hello-script">Hello</span>, I'm
+            <span class="caret-bar" aria-hidden="true"></span>
           </div>
 
-          <!-- corner squares like figma handles -->
           <span class="handle h-tl" aria-hidden="true"></span>
-          <span class="handle h-tr" aria-hidden="true"></span>
           <span class="handle h-bl" aria-hidden="true"></span>
+          <span class="handle h-tr" aria-hidden="true"></span>
           <span class="handle h-br" aria-hidden="true"></span>
-
-          <!-- little extra square above the box (like your comp) -->
-          <span class="handle h-top-mid" aria-hidden="true"></span>
         </div>
 
-        <!-- CURSOR PNG -->
         <img class="cursor-img" src="assets/images/cursor.png" alt="" aria-hidden="true" draggable="false">
-
-        <!-- BIG NAME PNG -->
         <img class="name-img" src="assets/images/name-kaileb.png" alt="Kaileb" draggable="false">
+      </div>
+    </section>
 
+    <!-- ABOUT -->
+    <section id="about" class="section about">
+      <div class="marquee" aria-label="About marquee">
+        <div class="marquee-track">
+          <div class="marquee-content">
+            <span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span>
+            <span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span>
+          </div>
+          <div class="marquee-content" aria-hidden="true">
+            <span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span>
+            <span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span><span>ABOUT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap about-inner">
+        <div class="about-copy">
+          <div class="about-spotlight" id="aboutSpotlight">
+            <p class="about-spotlight-text">
+              <span class="bio-dim">
+                Kaileb is an undergraduate student from Eastern Washington University, majoring in VCD—also known as Graphic Design.
+              </span>
+              <span class="bio-spot">
+                His journey into the world of designs started many moons ago, driven by a passion for creativity and an eye for perfection.
+              </span>
+              <span class="bio-dim">
+                Over the years, Kaileb honed his skills, mastering the art of detail and developing an impressive flair for design. In the last two years, his growth skyrocketed as he collaborated with clients and companies, turning creative visions into polished realities. Now, Kaileb stands at the peak of his potential, combining his technical expertise and artistic talent to deliver designs that are not just aesthetically pleasing, but also impactful.
+              </span>
+            </p>
+          </div>
+
+          <button class="about-toggle" id="aboutToggle" type="button" aria-label="Toggle bio" aria-expanded="false">
+            <span class="chevrons" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <div class="about-photo" aria-hidden="true">
+          <div class="stack">
+            <div class="stack-a"></div>
+            <div class="stack-b"></div>
+            <div class="stack-c"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKS -->
+    <section id="works" class="section works">
+      <img class="works-divider" src="assets/images/works-divider.png" alt="" aria-hidden="true">
+
+      <div class="wrap works-wrap">
+        <div class="works-title-row">
+          <h2 class="works-title">WORKS</h2>
+        </div>
+
+        <div class="works-stage">
+          <div class="works-bg" aria-hidden="true">
+            <span>WORKS</span>
+            <span>WORKS</span>
+          </div>
+
+          <div class="works-layout">
+            <div class="work-tile tile-1"></div>
+
+            <div class="work-meta meta-1">
+              <div class="work-meta-title">Talk Fast Social</div>
+              <div class="work-meta-role">Graphic Designer</div>
+              <p class="work-meta-desc">
+                Worked as a Graphic Designer at Talk Fast Social, a fast-paced advertising agency, creating social-first visuals and brand assets for a variety of clients including AMR and Inland Imaging.
+                Designed campaign graphics, ads, and content systems tailored to each brand's audience.
+              </p>
+              <a class="underline-link" href="#">View <span aria-hidden="true">↗</span></a>
+            </div>
+
+            <div class="work-tile tile-2"></div>
+
+            <div class="work-meta meta-2">
+              <div class="work-meta-title">EWU Student Affairs</div>
+              <div class="work-meta-role">Graphic Designer</div>
+              <p class="work-meta-desc">
+                Worked as a Graphic Designer in EWU Student Affairs directly under the Dean of Students, creating clear, on-brand design for campus-wide communication.
+                Designed flyers, posters, digital signage, and social media graphics for student programs, events, and key announcements.
+              </p>
+              <a class="underline-link" href="#">View <span aria-hidden="true">↗</span></a>
+            </div>
+
+            <div class="work-tile tile-3"></div>
+            <div class="work-tile tile-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section services">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">SERVICES</h2>
+        </div>
+
+        <div class="services-top">
+          <div class="services-copy">
+            <p class="services-text">
+              Providing a variety of creative solutions to help take your brand to the next level. Whether you need graphic designs, branding, UI/UX or something in between, I've got you covered with services tailored to fit your business perfectly.
+            </p>
+            <a class="underline-link" href="#contact">Contact Me <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="services-pill" aria-hidden="true">
+            <div class="pill-inner">ICON STRIP PLACEHOLDER</div>
+          </div>
+        </div>
+
+        <div class="rule"></div>
+        <div class="rule"></div>
+
+        <div class="services-grid">
+          <article class="service">
+            <div class="service-title-big">Graphic<br>Design</div>
+            <div class="service-row">
+              <div class="service-list">
+                <div>Ads</div><div>Graphics</div><div>Illustration</div>
+              </div>
+              <a class="underline-link" href="#">View <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="pixels pixels-left" aria-hidden="true">
+              <span class="px a"></span><span class="px b"></span><span class="px c"></span>
+            </div>
+          </article>
+
+          <article class="service">
+            <div class="service-title-big single">Branding</div>
+            <div class="service-row">
+              <div class="service-list">
+                <div>Logo</div><div>Visual Identity</div><div>Brand Identity</div>
+              </div>
+              <a class="underline-link" href="#">View <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="pixels pixels-mid" aria-hidden="true">
+              <span class="px a"></span><span class="px b"></span><span class="px c"></span>
+            </div>
+          </article>
+
+          <article class="service">
+            <div class="service-title-big single">UI/UX</div>
+            <div class="service-row">
+              <div class="service-list">
+                <div>UI Design</div><div>Prototyping</div>
+              </div>
+              <a class="underline-link" href="#">View <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="pixels pixels-right" aria-hidden="true">
+              <span class="px a"></span><span class="px b"></span><span class="px c"></span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">CONTACT</h2>
+        </div>
+
+        <div class="contact-grid">
+          <p class="contact-tagline">Bringing creative visions to life through design.</p>
+
+          <div class="contact-stack">
+            <div>Graphics</div><div>Branding</div><div>UI/UX</div>
+          </div>
+
+          <div class="contact-address">
+            <div class="label">Address :</div>
+            <div>4917 N Elm St</div>
+            <div>Spokane, WA</div>
+            <div>99205</div>
+          </div>
+        </div>
+
+        <div class="contact-links">
+          <a class="underline-link" href="#">Linkedin <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="#">Instagram <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="mailto:you@email.com">Email <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="tel:+15095551234">Phone <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </section>
   </main>
