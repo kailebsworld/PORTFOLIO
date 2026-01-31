@@ -2,6 +2,8 @@ const aboutToggle = document.getElementById("aboutToggle");
 const bio = document.getElementById("bio");
 const bioText = document.getElementById("bioText");
 const photoSlots = document.querySelectorAll(".photo-slot");
+const navToggle = document.querySelector(".nav-toggle");
+const navMenu = document.getElementById("navMenu");
 
 if (aboutToggle && bio && bioText) {
   aboutToggle.setAttribute("aria-expanded", "false");
@@ -25,6 +27,26 @@ if (aboutToggle && bio && bioText) {
   bioText.addEventListener("click", toggleBio);
   window.addEventListener("resize", setBioHeight);
   setBioHeight();
+}
+
+if (navToggle && navMenu) {
+  const setNavState = (isOpen) => {
+    navMenu.classList.toggle("is-open", isOpen);
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+  };
+
+  navToggle.addEventListener("click", () => {
+    const isOpen = navMenu.classList.contains("is-open");
+    setNavState(!isOpen);
+  });
+
+  navMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setNavState(false));
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 640) setNavState(false);
+  });
 }
 
 if (photoSlots.length) {

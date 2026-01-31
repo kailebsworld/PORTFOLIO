@@ -18,9 +18,9 @@
   --hello-top: 220px;
   --bgwords-right: clamp(16px, 4vw, 50px);
   --bgwords-top: clamp(90px, 14vw, 150px);
-  --cursor-left: 585px;
-  --cursor-top: 375px;
-  --cursor-size: 56px;
+  --cursor-left: clamp(200px, 44vw, 620px);
+  --cursor-top: clamp(160px, 30vw, 420px);
+  --cursor-size: clamp(32px, 7vw, 56px);
   --name-left: 265px;
   --name-top: 320px;
   --name-width: 1000px;
@@ -79,6 +79,7 @@ a{ color: inherit; text-decoration: none; }
   align-items:center;
   justify-content:space-between;
   gap:28px;
+  position: relative;
 }
 
 .logo{
@@ -101,6 +102,27 @@ a{ color: inherit; text-decoration: none; }
   justify-content:center;
   gap:28px;
   flex:1;
+}
+
+.nav-toggle{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:6px;
+  width:42px;
+  height:42px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color:#fff;
+  cursor:pointer;
+}
+
+.nav-toggle-bar{
+  width:22px;
+  height:2px;
+  background:#fff;
+  display:block;
 }
 
 .nav-link{
@@ -152,6 +174,14 @@ a{ color: inherit; text-decoration: none; }
   height: 680px;
   z-index: 2;
   transform: translateY(var(--lift));
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  z-index: 1;
+  pointer-events:none;
+  user-select:none;
 }
 
 .years{
@@ -216,13 +246,13 @@ a{ color: inherit; text-decoration: none; }
   left: var(--hello-left);
   top: var(--hello-top);
   z-index: 20;
-  border: 3px solid #fff;
-  padding: 28px 34px;
+  border: clamp(2px, 0.35vw, 3px) solid #fff;
+  padding: clamp(14px, 2.4vw, 28px) clamp(16px, 3vw, 34px);
   background: transparent;
 }
 
 .hello-text{
-  font-size: 100px;
+  font-size: clamp(36px, 7.5vw, 100px);
   line-height: 1;
   letter-spacing: -0.02em;
   display:flex;
@@ -682,6 +712,14 @@ a{ color: inherit; text-decoration: none; }
   margin-top: 28px;
 }
 
+.works-mobile{
+  display:none;
+}
+
+.works-mobile{
+  display:none;
+}
+
 .work-card{
   width: 100%;
   display:grid;
@@ -862,367 +900,21 @@ a{ color: inherit; text-decoration: none; }
 }
 
 /* ================= RESPONSIVE ================= */
-@media (max-width: 1100px){
-  :root{
-    --pad: 24px;
 
-    --hello-left: 0px;
-    --hello-top: 30px;
 
-    --cursor-left: 260px;
-    --cursor-top: 190px;
-    --cursor-size: 44px;
 
-    --name-left: 0px;
-    --name-top: 0px;
-    --name-width: 680px;
 
-    --work-w: 260px;
-    --work-h: 380px;
-  }
 
-  .nav{
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-  .bg-words{ display:block; }
-  .years{ display:block; }
 
-  .hero-inner{
-    height: auto;
-    padding-bottom: 60px;
-    transform: none;
-  }
 
-  .hello-box{
-    position: relative;
-    left: 0;
-    top: 0;
-    width: min(100%, 560px);
-  }
 
-  .hello-text{ font-size: 56px; }
 
-  .cursor-img{ display:none; }
 
-  .name-img,
-  .name-video{
-    position: relative;
-    left: 0;
-    top: 0;
-    width: min(100%, var(--name-width));
-    margin-top: 22px;
-  }
+/* Force phone width (iPhone 14 Pro Max 428px) */
 
-  .works-layout{
-    grid-template-columns: 1fr;
-    gap: 38px;
-  }
 
-  .work-card{
-    grid-template-columns: 1fr;
-    justify-items: center;
-    text-align: left;
-  }
 
-  .work-meta{
-    max-width: 520px;
-  }
-}
 
-@media (max-width: 900px){
-  :root{
-    --pad: 20px;
-    --work-w: 240px;
-    --work-h: 360px;
-  }
-
-  .site-header{
-    height:64px;
-  }
-
-  .header-inner{ height:64px; }
-
-  .connect{
-    font-size:16px;
-  }
-
-  .hero{
-    min-height: 520px;
-  }
-
-  .nav{
-    display:flex;
-    gap:14px;
-    font-size:14px;
-  }
-
-  .bg-words{ display:block; }
-  .years{ display:block; }
-
-  .hello-box{
-    padding: 18px 22px;
-    border-width: 2px;
-    width: min(100%, 520px);
-  }
-
-  .hello-text{
-    font-size: 48px;
-  }
-
-  .caret-bar{
-    height: 56px;
-  }
-
-  .about-inner{
-    grid-template-columns: 1fr;
-    gap: 26px;
-  }
-
-  .about-spotlight{
-    max-width: 100%;
-  }
-
-  .about-photo{
-    justify-content:center;
-  }
-
-  .about-photo .stack{
-    transform: translateX(0);
-  }
-
-  .stack-a,
-  .stack-b,
-  .stack-c{
-    width: 240px;
-    height: 240px;
-  }
-
-  .works-stage{
-    min-height: auto;
-  }
-
-  .works-bg{
-    position: static;
-    transform: none;
-    margin: 10px 0 0;
-    align-items:center;
-  }
-
-  .works-bg span{
-    font-size: clamp(120px, 24vw, 200px);
-  }
-
-  .services-top{
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .services-pill{
-    height: 140px;
-  }
-
-  .services-grid{
-    grid-template-columns: 1fr;
-  }
-
-  .service-title-big{
-    font-size: 56px;
-  }
-
-  .pixels{
-    height: 300px;
-  }
-
-  .contact-grid{
-    grid-template-columns: 1fr;
-    gap: 26px;
-  }
-}
-
-@media (max-width: 700px){
-  :root{
-    --pad: 16px;
-    --work-w: 220px;
-    --work-h: 320px;
-  }
-
-  .site-header{
-    position: sticky;
-  }
-
-  .logo{
-    margin-left: 0;
-  }
-
-  .connect{
-    font-size:14px;
-  }
-
-  .hero-inner{
-    padding-bottom: 40px;
-  }
-
-  .nav{
-    display:flex;
-    gap:10px;
-    font-size:12px;
-  }
-
-  .bg-words{ display:block; }
-  .years{ display:block; }
-
-  .hello-text{
-    font-size: 42px;
-  }
-
-  .caret-bar{
-    height: 46px;
-  }
-
-  .name-img,
-  .name-video{
-    width: 100%;
-  }
-
-  .marquee-content{
-    font-size: 18px;
-  }
-
-  .about-spotlight-text{
-    font-size: clamp(20px, 4.8vw, 26px);
-  }
-
-  .about-toggle{
-    margin-top: 18px;
-  }
-
-  .stack-a,
-  .stack-b,
-  .stack-c{
-    width: 220px;
-    height: 220px;
-  }
-
-  .works-title{
-    letter-spacing: .12em;
-  }
-
-  .works-layout{
-    gap: 30px;
-  }
-
-  .work-card{
-    max-width: 100%;
-  }
-
-  .work-meta{
-    max-width: 100%;
-  }
-
-  .section-title{
-    font-size: 28px;
-  }
-
-  .service-title-big{
-    font-size: 46px;
-  }
-
-  .service-row{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .pixels{
-    height: 260px;
-  }
-}
-
-@media (max-width: 520px){
-  :root{
-    --pad: 14px;
-    --work-w: 200px;
-    --work-h: 300px;
-  }
-
-  .site-header{
-    height:56px;
-  }
-
-  .header-inner{ height:56px; }
-
-  .connect{
-    display:inline-flex;
-    font-size:12px;
-  }
-
-  .hello-box{
-    padding: 14px 16px;
-    width: min(100%, 440px);
-  }
-
-  .hello-text{
-    font-size: 36px;
-  }
-
-  .caret-bar{
-    height: 38px;
-  }
-
-  .nav{
-    display:flex;
-    gap:8px;
-    font-size:11px;
-  }
-
-  .bg-words{ display:block; }
-  .years{ display:block; }
-
-  .about-spotlight-text{
-    line-height: 1.28;
-  }
-
-  .about:not(.is-open) .about-spotlight{
-    max-height: 260px;
-  }
-
-  .stack-a,
-  .stack-b,
-  .stack-c{
-    width: 196px;
-    height: 196px;
-  }
-
-  .works-bg span{
-    font-size: clamp(96px, 24vw, 160px);
-  }
-
-  .works-layout{
-    gap: 24px;
-  }
-
-  .work-meta-title{
-    font-size: 15px;
-  }
-
-  .work-meta-desc{
-    font-size: 13px;
-  }
-
-  .services-pill{
-    height: 120px;
-  }
-
-  .pixels{
-    height: 220px;
-  }
-
-  .contact-links{
-    gap: 12px;
-  }
-}
 .about:not(.is-open) .about-toggle{
   margin-top: 6px;
 }
@@ -1233,3 +925,9 @@ a{ color: inherit; text-decoration: none; }
 .bio.is-open .about-toggle{
   transform: rotate(180deg);
 }
+
+/* Final mobile WORKS override (must be last) */
+
+
+/* Frame 17 mobile layout (phone view only) */
+
