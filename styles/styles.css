@@ -698,7 +698,19 @@ a{ color: inherit; text-decoration: none; }
 .work-tile{
   width: var(--work-w);
   height: var(--work-h);
-  background:#fff;
+  background: transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.work-tile img{
+  display:block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .work-meta{
@@ -754,7 +766,12 @@ a{ color: inherit; text-decoration: none; }
   justify-content:center;
 }
 
-.pill-inner{ opacity:.55; letter-spacing:.08em; font-size: 12px; }
+.pill-strip{
+  width: min(520px, 80%);
+  height: auto;
+  display:block;
+  opacity: .85;
+}
 
 .rule{ border-top: 1px solid rgba(255,255,255,.25); margin: 54px 0; }
 
