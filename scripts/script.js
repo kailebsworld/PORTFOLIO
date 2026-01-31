@@ -1,46 +1,64 @@
-const aboutSection = document.querySelector(".about");
 const aboutToggle = document.getElementById("aboutToggle");
-const aboutSpotlight = document.getElementById("aboutSpotlight");
-const worksSection = document.querySelector(".works");
-const rootEl = document.documentElement;
+const bio = document.getElementById("bio");
+const bioText = document.getElementById("bioText");
+const photoSlots = document.querySelectorAll(".photo-slot");
 
-if (aboutSection && aboutToggle) {
-  aboutToggle.setAttribute(
-    "aria-expanded",
-    String(aboutSection.classList.contains("is-open"))
-  );
+if (aboutToggle && bio && bioText) {
+  aboutToggle.setAttribute("aria-expanded", "false");
 
-  const toggleAbout = () => {
-    const isOpen = aboutSection.classList.toggle("is-open");
-    aboutToggle.setAttribute("aria-expanded", String(isOpen));
+  const setBioHeight = () => {
+    if (bio.classList.contains("is-open")) {
+      bioText.style.maxHeight = `${bioText.scrollHeight}px`;
+    } else {
+      bioText.style.maxHeight = "280px";
+    }
   };
 
-  aboutToggle.addEventListener("click", toggleAbout);
-  if (aboutSpotlight) {
-    aboutSpotlight.addEventListener("click", toggleAbout);
-  }
+  const toggleBio = () => {
+    const isOpen = bio.classList.toggle("is-open");
+    bio.classList.toggle("is-collapsed", !isOpen);
+    aboutToggle.setAttribute("aria-expanded", String(isOpen));
+    setBioHeight();
+  };
+
+  aboutToggle.addEventListener("click", toggleBio);
+  bioText.addEventListener("click", toggleBio);
+  window.addEventListener("resize", setBioHeight);
+  setBioHeight();
 }
 
-let ticking = false;
+if (photoSlots.length) {
+  const centerSlot = document.querySelector(".photo-slot.is-center");
 
-const updateAboutCollapse = () => {
-  if (!aboutSection) return;
-  const rect = aboutSection.getBoundingClientRect();
-  const scrollY = window.scrollY || window.pageYOffset;
-  const start = scrollY + rect.top - window.innerHeight * 0.2;
-  const end = start + rect.height * 0.9;
-  const t = (scrollY - start) / (end - start);
-  const clamped = Math.max(0, Math.min(1, t));
-  rootEl.style.setProperty("--collapse", clamped.toFixed(3));
-  ticking = false;
-};
+  const swapWithCenter = (targetSlot) => {
+    if (!centerSlot || targetSlot === centerSlot) return;
 
-const onScroll = () => {
-  if (ticking) return;
-  ticking = true;
-  requestAnimationFrame(updateAboutCollapse);
-};
+    const centerImg = centerSlot.querySelector("img");
+    const targetImg = targetSlot.querySelector("img");
+    if (!centerImg || !targetImg) return;
 
-updateAboutCollapse();
-window.addEventListener("scroll", onScroll, { passive: true });
-window.addEventListener("resize", updateAboutCollapse);
+    centerSlot.style.opacity = "0.6";
+    targetSlot.style.opacity = "0.6";
+
+    setTimeout(() => {
+      const tmpSrc = centerImg.src;
+      const tmpAlt = centerImg.alt;
+      const tmpFit = centerImg.dataset.fit || "contain";
+
+      centerImg.src = targetImg.src;
+      centerImg.alt = targetImg.alt;
+      centerImg.dataset.fit = targetImg.dataset.fit || "contain";
+
+      targetImg.src = tmpSrc;
+      targetImg.alt = tmpAlt;
+      targetImg.dataset.fit = tmpFit;
+
+      centerSlot.style.opacity = "1";
+      targetSlot.style.opacity = "1";
+    }, 220);
+  };
+
+  photoSlots.forEach((slot) => {
+    slot.addEventListener("click", () => swapWithCenter(slot));
+  });
+}

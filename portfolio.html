@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kaileb — Portfolio</title>
 
+  <link rel="icon" type="image/png" href="assets/images/logo-k.png" />
   <link rel="stylesheet" href="styles/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +26,7 @@
         <a class="nav-link" href="#contact">CONTACT</a>
       </nav>
 
-      <a class="connect" href="#contact">
+      <a class="connect" href="mailto:kcardle@ewu.edu">
         Let's Connect <span class="arrow" aria-hidden="true">↗</span>
       </a>
     </div>
@@ -39,8 +40,13 @@
           <p>(2026)</p><p>(2026)</p><p>(2026)</p><p>(2026)</p>
         </div>
 
-        <div class="bg-words" aria-hidden="true">
-          <div>GRAPHICS • UI/UX</div><div>GRAPHICS • UI/UX</div><div>GRAPHICS • UI/UX</div><div>GRAPHICS • UI/UX</div>
+        <div class="bg-words bg-words-front" aria-hidden="true">
+          <div>GRAPHICS • UI/UX</div>
+          <div>GRAPHICS • UI/UX</div>
+          <div>GRAPHICS • UI/UX</div>
+        </div>
+        <div class="bg-words bg-words-back" aria-hidden="true">
+          <div>GRAPHICS • UI/UX</div>
         </div>
 
         <div class="hello-box">
@@ -56,7 +62,9 @@
         </div>
 
         <img class="cursor-img" src="assets/images/cursor.png" alt="" aria-hidden="true" draggable="false">
-        <img class="name-img" src="assets/images/name-kaileb.png" alt="Kaileb" draggable="false">
+        <video class="name-video" autoplay loop muted playsinline>
+          <source src="assets/images/Final Comp_1.mp4" type="video/mp4">
+        </video>
       </div>
     </section>
 
@@ -76,8 +84,8 @@
       </div>
 
       <div class="wrap about-inner">
-        <div class="about-copy">
-          <div class="about-spotlight" id="aboutSpotlight">
+        <div class="bio is-collapsed" id="bio">
+          <div class="bio-text" id="bioText">
             <p class="about-spotlight-text">
               <span class="bio-dim">
                 Kaileb is an undergraduate student from Eastern Washington University, majoring in VCD—also known as Graphic Design.
@@ -86,24 +94,33 @@
                 His journey into the world of designs started many moons ago, driven by a passion for creativity and an eye for perfection.
               </span>
               <span class="bio-dim">
-                Over the years, Kaileb honed his skills, mastering the art of detail and developing an impressive flair for design. In the last two years, his growth skyrocketed as he collaborated with clients and companies, turning creative visions into polished realities. Now, Kaileb stands at the peak of his potential, combining his technical expertise and artistic talent to deliver designs that are not just aesthetically pleasing, but also impactful.
+                Over the years, Kaileb honed his skills, mastering the art of detail and developing an impressive flair.
+              </span>
+              <span class="bio-dim">
+                In the last two years, his growth skyrocketed as he collaborated with clients and companies, turning creative visions into polished realities. Now, Kaileb stands at the peak of his potential, combining his technical expertise and artistic talent to deliver designs that are not just aesthetically pleasing, but also impactful.
               </span>
             </p>
+          </div>
+
+          <div class="photo-grid" aria-label="Photo gallery">
+            <button class="photo-slot is-left" type="button">
+              <img src="assets/images/me 1.jpg" alt="Portrait 1" data-fit="contain">
+            </button>
+            <button class="photo-slot is-center" type="button">
+              <img src="assets/images/me 2.jpeg" alt="Portrait 2" data-fit="contain">
+            </button>
+            <button class="photo-slot is-right" type="button">
+              <img src="assets/images/me 3.JPG" alt="Portrait 3" data-fit="contain">
+            </button>
           </div>
 
           <button class="about-toggle" id="aboutToggle" type="button" aria-label="Toggle bio" aria-expanded="false">
             <span class="chevrons" aria-hidden="true"></span>
           </button>
         </div>
-
-        <div class="about-photo" aria-hidden="true">
-          <div class="stack">
-            <div class="stack-a"></div>
-            <div class="stack-b"></div>
-            <div class="stack-c"></div>
-          </div>
-        </div>
       </div>
+
+      <img class="about-divider" src="assets/images/works-divider.png" alt="" aria-hidden="true">
     </section>
 
     <!-- WORKS -->
@@ -251,10 +268,10 @@
         </div>
 
         <div class="contact-links">
-          <a class="underline-link" href="#">Linkedin <span aria-hidden="true">↗</span></a>
-          <a class="underline-link" href="#">Instagram <span aria-hidden="true">↗</span></a>
-          <a class="underline-link" href="mailto:you@email.com">Email <span aria-hidden="true">↗</span></a>
-          <a class="underline-link" href="tel:+15095551234">Phone <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="https://www.linkedin.com/in/kaileb-cardle-679214397/" target="_blank" rel="noopener">Linkedin <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="https://www.instagram.com/kailebsdesign/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="mailto:kcardle@ewu.edu">Email <span aria-hidden="true">↗</span></a>
+          <a class="underline-link" href="tel:+15095989991">Phone <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </section>
