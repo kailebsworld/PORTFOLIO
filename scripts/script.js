@@ -1,3 +1,44 @@
+const themeToggle = document.querySelector(".theme-toggle");
+const themeRoot = document.documentElement;
+const savedTheme = localStorage.getItem("theme");
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+
+const applyThemeAssets = (theme) => {
+  document.querySelectorAll("[data-src-light]").forEach((el) => {
+    const lightSrc = el.getAttribute("data-src-light");
+    const darkSrc = el.getAttribute("data-src-dark");
+    const nextSrc = theme === "light" ? lightSrc : darkSrc;
+
+    if (el.tagName === "SOURCE") {
+      if (el.src !== nextSrc) {
+        el.src = nextSrc;
+        if (el.parentElement && el.parentElement.tagName === "VIDEO") {
+          el.parentElement.load();
+        }
+      }
+      return;
+    }
+
+    el.src = nextSrc;
+  });
+};
+
+themeRoot.dataset.theme = initialTheme;
+applyThemeAssets(initialTheme);
+
+if (themeToggle) {
+  themeToggle.setAttribute("aria-pressed", String(initialTheme === "dark"));
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = themeRoot.dataset.theme === "dark" ? "dark" : "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    themeRoot.dataset.theme = newTheme;
+    localStorage.setItem("theme", newTheme);
+    themeToggle.setAttribute("aria-pressed", String(newTheme === "dark"));
+    applyThemeAssets(newTheme);
+  });
+}
+
 const aboutToggle = document.getElementById("aboutToggle");
 const bio = document.getElementById("bio");
 const bioText = document.getElementById("bioText");
