@@ -11,6 +11,7 @@
 
   --wrap: 83.75rem;
   --pad: 3.125rem;
+  --header-h: 4.875rem;
 
   --lift: -6.25rem;
   --years-left: clamp(1rem, 4vw, 3.125rem);
@@ -77,22 +78,28 @@ a:focus-visible{
 
 /* ================= HEADER ================= */
 .site-header{
-  position: sticky;
+  position: fixed;
   top:0;
+  left:0;
+  right:0;
   z-index:50;
-  height:4.875rem;
+  height:var(--header-h);
   border-bottom: 0.0625rem solid var(--line);
   background: var(--color-surface-glass);
   backdrop-filter: blur(0.625rem);
 }
 
 .header-inner{
-  height:4.875rem;
+  height:var(--header-h);
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:1.75rem;
   position: relative;
+}
+
+main{
+  padding-top: var(--header-h);
 }
 
 .logo{
