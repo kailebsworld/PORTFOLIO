@@ -802,19 +802,22 @@ main{
 .works-layout{
   position: relative;
   z-index: 2;
-  display:grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display:flex;
+  flex-wrap:wrap;
   gap: 4.375rem;
-  justify-items: center;
-  align-items:start;
+  justify-content:center;
+  align-items:flex-start;
   margin-top: 1.75rem;
 }
 
 .work-group{
+  flex: 1 1 31.25rem;
+  max-width: 37.5rem;
   width: 100%;
-  display:grid;
+  display:flex;
+  flex-direction:column;
   gap: 3.125rem;
-  justify-items:center;
+  align-items:center;
 }
 
 .works-mobile{
@@ -827,10 +830,9 @@ main{
 
 .work-card{
   width: 100%;
-  display:grid;
-  grid-template-columns: var(--work-w) minmax(0, 1fr);
+  display:flex;
   gap: 1.375rem;
-  align-items:start;
+  align-items:flex-start;
   max-width: calc(var(--work-w) + var(--work-text-w) + 1.375rem);
 }
 
@@ -887,11 +889,19 @@ main{
 }
 
 .services-top{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
+  display:flex;
+  flex-wrap:wrap;
   gap: 3.125rem;
   align-items:center;
   margin-top: 1.875rem;
+}
+
+.services-copy{
+  flex: 1 1 28.125rem;
+}
+
+.services-pill{
+  flex: 1 1 21.25rem;
 }
 
 .services-text{
@@ -921,10 +931,15 @@ main{
 .rule{ border-top: 0.0625rem solid var(--color-border-muted); margin: 3.375rem 0; }
 
 .services-grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display:flex;
+  flex-wrap:wrap;
   gap: 2.5rem;
-  align-items:start;
+  align-items:flex-start;
+}
+
+.services-grid > .service{
+  flex: 1 1 calc(33.333% - 2.5rem);
+  min-width: 17.5rem;
 }
 
 .service-title-big{
@@ -973,10 +988,15 @@ main{
 .pixels-right .c{ width:56.25rem; height:32.5rem; left:7.5rem; top:15rem; z-index:2; }
 
 .contact-grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display:flex;
+  flex-wrap:wrap;
   gap: 3.75rem;
   margin-top: 2.5rem;
+}
+
+.contact-grid > *{
+  flex: 1 1 calc(33.333% - 3.75rem);
+  min-width: 13.75rem;
 }
 
 .contact-tagline{
@@ -1015,11 +1035,130 @@ main{
 
 /* ================= RESPONSIVE (Desktop-first) ================= */
 @media (max-width: 1024px){
-  /* Tablet: keep desktop layout */
+  :root{
+    --pad: 2rem;
+  }
+
+  .nav-link{
+    font-size: 1rem;
+  }
+
+  .connect{
+    font-size: 1rem;
+  }
+
+  .works-layout{
+    gap: 2.5rem;
+  }
+
+  .work-group{
+    flex-basis: 100%;
+    max-width: 42.5rem;
+  }
+
+  .services-grid > .service{
+    flex-basis: calc(50% - 2.5rem);
+  }
+
+  .contact-grid > *{
+    flex-basis: calc(50% - 3.75rem);
+  }
+}
+
+@media (max-width: 900px){
+  .header-inner{
+    gap: 0.75rem;
+  }
+
+  .nav{
+    display:none;
+    position:absolute;
+    top: calc(100% + 0.5rem);
+    left: var(--pad);
+    right: var(--pad);
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    gap: 0;
+    border: 0.0625rem solid var(--line-strong);
+    background: var(--color-surface-primary);
+    z-index: 70;
+  }
+
+  .nav.is-open{
+    display:flex;
+  }
+
+  .nav-link{
+    display:block;
+    padding: 0.75rem 0.875rem;
+    border-bottom: 0.0625rem solid var(--line);
+    opacity: 1;
+    font-size: 0.9375rem;
+  }
+
+  .nav-link:last-child{
+    border-bottom: 0;
+  }
+
+  .nav-toggle{
+    display:inline-flex;
+  }
+
+  .connect{
+    display:none;
+  }
+
+  .theme-trigger{
+    padding: 0.5rem 0.625rem;
+  }
+
+  .theme-trigger-label{
+    display:none;
+  }
+
+  .theme-trigger-caret{
+    display:none;
+  }
 }
 
 @media (max-width: 768px){
-  /* Tablet: keep desktop layout */
+  :root{
+    --pad: 1.25rem;
+  }
+
+  .header-inner{
+    gap: 0.875rem;
+  }
+
+  .theme-menu{
+    right: 0;
+    min-width: 10rem;
+  }
+
+  .work-card{
+    flex-direction:column;
+    max-width: var(--work-w);
+  }
+
+  .work-meta{
+    max-width: 100%;
+  }
+
+  .services-top{
+    gap: 1.5rem;
+  }
+
+  .services-copy,
+  .services-pill,
+  .services-grid > .service,
+  .contact-grid > *{
+    flex-basis: 100%;
+  }
+
+  .contact-links{
+    justify-content:flex-start;
+  }
 }
 
 @media (max-width: 480px){
@@ -1031,7 +1170,6 @@ main{
 
   .logo{ margin-left: 0; }
 
-  .nav,
   .connect{
     display:none;
   }
