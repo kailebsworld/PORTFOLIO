@@ -1,8 +1,11 @@
-const themeToggle = document.querySelector(".theme-toggle");
+const themeDropdown = document.querySelector(".theme-dropdown");
+const themeTrigger = document.querySelector(".theme-trigger");
+const themeMenu = document.getElementById("themeMenu");
+const themeOptions = Array.from(document.querySelectorAll(".theme-option"));
 const themeRoot = document.documentElement;
-const savedTheme = localStorage.getItem("theme");
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+const validThemeChoices = new Set(["system", "light", "dark"]);
+let currentThemeChoice = "system";
 
 const applyThemeAssets = (theme) => {
   document.querySelectorAll("[data-src-light]").forEach((el) => {
@@ -24,20 +27,81 @@ const applyThemeAssets = (theme) => {
   });
 };
 
-themeRoot.dataset.theme = initialTheme;
-applyThemeAssets(initialTheme);
+const getStoredThemeChoice = () => {
+  const stored = localStorage.getItem("theme");
+  if (stored && validThemeChoices.has(stored)) return stored;
+  return null;
+};
 
-if (themeToggle) {
-  themeToggle.setAttribute("aria-pressed", String(initialTheme === "dark"));
-  themeToggle.addEventListener("click", () => {
-    const currentTheme = themeRoot.dataset.theme === "dark" ? "dark" : "light";
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    themeRoot.dataset.theme = newTheme;
-    localStorage.setItem("theme", newTheme);
-    themeToggle.setAttribute("aria-pressed", String(newTheme === "dark"));
-    applyThemeAssets(newTheme);
+const resolveAppliedTheme = (themeChoice) => {
+  if (themeChoice === "light" || themeChoice === "dark") return themeChoice;
+  return systemThemeQuery.matches ? "dark" : "light";
+};
+
+const syncThemeUi = (themeChoice) => {
+  if (!themeDropdown) return;
+  themeDropdown.dataset.choice = themeChoice;
+  themeOptions.forEach((option) => {
+    const isActive = option.dataset.themeChoice === themeChoice;
+    option.classList.toggle("is-active", isActive);
+    option.setAttribute("aria-checked", String(isActive));
+  });
+};
+
+const applyThemeChoice = (themeChoice, shouldPersist = false) => {
+  currentThemeChoice = validThemeChoices.has(themeChoice) ? themeChoice : "system";
+  const appliedTheme = resolveAppliedTheme(currentThemeChoice);
+  themeRoot.dataset.theme = appliedTheme;
+  applyThemeAssets(appliedTheme);
+  syncThemeUi(currentThemeChoice);
+  if (shouldPersist) localStorage.setItem("theme", currentThemeChoice);
+};
+
+const closeThemeMenu = () => {
+  if (!themeDropdown || !themeTrigger) return;
+  themeDropdown.classList.remove("open");
+  themeTrigger.setAttribute("aria-expanded", "false");
+};
+
+const openThemeMenu = () => {
+  if (!themeDropdown || !themeTrigger) return;
+  themeDropdown.classList.add("open");
+  themeTrigger.setAttribute("aria-expanded", "true");
+};
+
+const initialThemeChoice = getStoredThemeChoice() || "system";
+applyThemeChoice(initialThemeChoice, false);
+
+if (themeDropdown && themeTrigger && themeMenu && themeOptions.length) {
+  themeTrigger.addEventListener("click", () => {
+    const isOpen = themeDropdown.classList.contains("open");
+    if (isOpen) {
+      closeThemeMenu();
+    } else {
+      openThemeMenu();
+    }
+  });
+
+  themeOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      const nextChoice = option.dataset.themeChoice || "system";
+      applyThemeChoice(nextChoice, true);
+      closeThemeMenu();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!themeDropdown.contains(event.target)) closeThemeMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeThemeMenu();
   });
 }
+
+systemThemeQuery.addEventListener("change", () => {
+  if (currentThemeChoice === "system") applyThemeChoice("system", false);
+});
 
 const aboutToggle = document.getElementById("aboutToggle");
 const bio = document.getElementById("bio");
