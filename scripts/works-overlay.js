@@ -75,6 +75,8 @@
       tags: ["UI", "UX", "Visual"],
       images: ["assets/images/MAISON-MARGIELA.png"],
       mediaThumb: "assets/images/MAISON-MARGIELA.png",
+      previewEmbed:
+        "https://www.figma.com/proto/1zrJvakou1m2Dt96WqwzJ9/UX-1-Project--5--Choose-Your-Own--Template---Copy-?node-id=3232-841&t=cfTtb8RmywbUL2fO-0&scaling=scale-down&content-scaling=fixed&page-id=5%3A6&starting-point-node-id=3232%3A841",
       link: ""
     },
     {
@@ -85,6 +87,8 @@
       tags: ["UI", "UX", "Prototype"],
       images: ["assets/images/KlickyKitty.png"],
       mediaThumb: "assets/images/KlickyKitty.png",
+      previewEmbed:
+        "https://www.figma.com/proto/0ngB7HYrTOgw0hVF19SqEB/UX-1-Project--4--Virtual-Pet--Template---Copy-?node-id=2274-9720&t=cfTtb8RmywbUL2fO-0&scaling=scale-down&content-scaling=fixed&page-id=6%3A49&starting-point-node-id=2274%3A9720",
       link: ""
     },
     {
@@ -95,6 +99,8 @@
       tags: ["UI", "UX", "Interaction"],
       images: ["assets/images/drop-a-file.png"],
       mediaThumb: "assets/images/drop-a-file.png",
+      previewEmbed:
+        "https://www.figma.com/proto/sq1AFyKuaMPlUM31Fw8qoO/Daily-UI-Challenge?node-id=61-106&t=cfTtb8RmywbUL2fO-0&scaling=scale-down&content-scaling=fixed&page-id=59%3A3&starting-point-node-id=61%3A106",
       link: ""
     }
   ];
@@ -103,6 +109,7 @@
     isOpen: false,
     projectIndex: 0,
     imageIndex: 0,
+    previewMode: "image",
     scrollY: 0,
     lastFocus: null
   };
@@ -119,6 +126,7 @@
   let worksTags;
   let worksImage;
   let worksVideo;
+  let worksEmbed;
   let worksImageFallback;
   let worksIndex;
   let worksTopIndexNodes;
@@ -135,6 +143,8 @@
   const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
   const isVideoSrc = (src) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(src || "");
   const normalizeMediaSrc = (src) => encodeURI(src || "").replace(/#/g, "%23");
+  const toFigmaEmbedUrl = (url) =>
+    `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url || "")}`;
 
   const getProjectIdFromHash = () => {
     if (!window.location.hash.startsWith("#work=")) return null;
@@ -279,6 +289,7 @@
 
   const updateImage = ({ animate = true } = {}) => {
     const project = PROJECTS[STATE.projectIndex];
+    const hasEmbed = Boolean(project.previewEmbed);
     const totalImages = project.images.length || 1;
     const mediaSrc = project.images[STATE.imageIndex] || project.images[0] || "";
     const safeMediaSrc = normalizeMediaSrc(mediaSrc);
@@ -288,11 +299,31 @@
     if (!mediaIsVideo && mediaSrc) preloadImage(mediaSrc);
 
     worksImageFallback.classList.remove("works-is-visible");
-    if (mediaIsVideo) {
+    if (hasEmbed) {
+      STATE.previewMode = "embed";
       worksImage.hidden = true;
       worksImage.style.display = "none";
-      worksImage.src = "";
+      worksImage.removeAttribute("src");
       worksImage.alt = "";
+      worksVideo.pause();
+      worksVideo.removeAttribute("src");
+      worksVideo.poster = "";
+      worksVideo.load();
+      worksVideo.hidden = true;
+      worksVideo.style.display = "none";
+      worksEmbed.hidden = false;
+      worksEmbed.style.display = "block";
+      worksEmbed.src = toFigmaEmbedUrl(project.previewEmbed);
+      worksImageFallback.classList.remove("works-is-visible");
+    } else if (mediaIsVideo) {
+      STATE.previewMode = "video";
+      worksImage.hidden = true;
+      worksImage.style.display = "none";
+      worksImage.removeAttribute("src");
+      worksImage.alt = "";
+      worksEmbed.hidden = true;
+      worksEmbed.style.display = "none";
+      worksEmbed.src = "";
       worksVideo.hidden = false;
       worksVideo.style.display = "block";
       worksVideo.poster = normalizeMediaSrc(project.mediaPoster || "");
@@ -300,20 +331,24 @@
       worksVideo.load();
       worksVideo.play().catch(() => {});
     } else {
+      STATE.previewMode = "image";
       worksVideo.pause();
       worksVideo.removeAttribute("src");
       worksVideo.poster = "";
       worksVideo.load();
       worksVideo.hidden = true;
       worksVideo.style.display = "none";
+      worksEmbed.hidden = true;
+      worksEmbed.style.display = "none";
+      worksEmbed.src = "";
       worksImage.hidden = false;
       worksImage.style.display = "block";
       worksImage.alt = `${project.title} preview ${STATE.imageIndex + 1}`;
       worksImage.src = safeMediaSrc;
     }
 
-    worksMediaPrev.disabled = totalImages <= 1;
-    worksMediaNext.disabled = totalImages <= 1;
+    worksMediaPrev.disabled = hasEmbed || totalImages <= 1;
+    worksMediaNext.disabled = hasEmbed || totalImages <= 1;
 
     window.setTimeout(() => {
       worksImage.classList.remove("works-is-swapping");
@@ -514,6 +549,13 @@
                 <div class="works-media-frame">
                   <img class="works-image" src="" alt="" loading="eager" decoding="async">
                   <video class="works-video" playsinline muted loop controls hidden></video>
+                  <iframe
+                    class="works-embed"
+                    title="Prototype preview"
+                    loading="lazy"
+                    allowfullscreen
+                    hidden
+                  ></iframe>
                   <div class="works-image-fallback" role="status" aria-live="polite">Preview image unavailable.</div>
                 </div>
                 <button class="works-media-nav works-media-next" type="button" aria-label="Next image">→</button>
@@ -541,6 +583,7 @@
     worksTags = document.querySelector(".works-tags");
     worksImage = document.querySelector(".works-image");
     worksVideo = document.querySelector(".works-video");
+    worksEmbed = document.querySelector(".works-embed");
     worksImageFallback = document.querySelector(".works-image-fallback");
     worksIndex = document.querySelector(".works-index");
     worksTopIndexNodes = Array.from(document.querySelectorAll(".works-top-index"));
@@ -554,14 +597,20 @@
     worksStrip = document.querySelector(".works-strip");
 
     worksImage.addEventListener("error", () => {
-      worksImageFallback.classList.add("works-is-visible");
+      if (STATE.previewMode === "image" && worksImage.getAttribute("src")) {
+        worksImageFallback.classList.add("works-is-visible");
+      }
     });
 
     worksImage.addEventListener("load", () => {
-      worksImageFallback.classList.remove("works-is-visible");
+      if (STATE.previewMode === "image") {
+        worksImageFallback.classList.remove("works-is-visible");
+      }
     });
     worksVideo.addEventListener("loadeddata", () => {
-      worksImageFallback.classList.remove("works-is-visible");
+      if (STATE.previewMode === "video") {
+        worksImageFallback.classList.remove("works-is-visible");
+      }
       if (worksVideo.currentTime === 0) {
         try {
           worksVideo.currentTime = 0.1;
@@ -571,7 +620,14 @@
       }
     });
     worksVideo.addEventListener("error", () => {
-      worksImageFallback.classList.add("works-is-visible");
+      if (STATE.previewMode === "video") {
+        worksImageFallback.classList.add("works-is-visible");
+      }
+    });
+    worksEmbed.addEventListener("load", () => {
+      if (STATE.previewMode === "embed") {
+        worksImageFallback.classList.remove("works-is-visible");
+      }
     });
 
     worksClose.addEventListener("click", () => closeWorksOverlay());
