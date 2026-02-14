@@ -9,10 +9,8 @@
       meta: "Graphic Design • 2026",
       description:
         "Social-first campaign graphics and structured ad systems designed for speed, clarity, and brand consistency across client channels.",
-      images: [
-        "assets/images/TFS 1.jpg",
-        "assets/images/TFS 2.jpg"
-      ],
+      tags: ["Web Design", "Marketing", "Motion"],
+      images: ["assets/images/TFS 1.jpg", "assets/images/TFS 2.jpg"],
       link: ""
     },
     {
@@ -21,6 +19,7 @@
       meta: "Campus Communication • 2026",
       description:
         "Print and digital communication assets developed for student programs, events, and institutional announcements under the Dean of Students office.",
+      tags: ["Print", "Campaign", "Brand"],
       images: [
         "assets/images/Student Affairs-251102-Dean on Call rack card- v1 (dragged)-1.png",
         "assets/images/Student Affairs-251102-Dean on Call rack card- v1 (dragged) 2-1.png"
@@ -33,11 +32,8 @@
       meta: "Prints • Illustration • 2026",
       description:
         "A selection of poster, editorial, and visual system work focused on composition, hierarchy, and tactile graphic language.",
-      images: [
-        "assets/images/Calendar 1.png",
-        "assets/images/Poser Mag.png",
-        "assets/images/PAS 1.png"
-      ],
+      tags: ["Prints", "Graphics", "Illustration"],
+      images: ["assets/images/Calendar 1.png", "assets/images/Poser Mag.png", "assets/images/PAS 1.png"],
       link: ""
     },
     {
@@ -46,11 +42,8 @@
       meta: "Identity Systems • 2026",
       description:
         "Logo and brand identity explorations that align typography, color, and messaging into a cohesive, scalable system.",
-      images: [
-        "assets/images/PAS LOGO.png",
-        "assets/images/PAS 2.png",
-        "assets/images/PAS 1.png"
-      ],
+      tags: ["Identity", "Logo", "System"],
+      images: ["assets/images/PAS LOGO.png", "assets/images/PAS 2.png", "assets/images/PAS 1.png"],
       link: ""
     },
     {
@@ -59,11 +52,8 @@
       meta: "UI Design • Prototyping • 2026",
       description:
         "Interface and prototype studies balancing clarity, modern aesthetics, and purposeful interaction across screen sizes.",
-      images: [
-        "assets/images/MAISON-MARGIELA.png",
-        "assets/images/KlickyKitty.png",
-        "assets/images/drop-a-file.png"
-      ],
+      tags: ["UI", "UX", "Prototype"],
+      images: ["assets/images/MAISON-MARGIELA.png", "assets/images/KlickyKitty.png", "assets/images/drop-a-file.png"],
       link: ""
     }
   ];
@@ -84,9 +74,11 @@
   let worksTitle;
   let worksMeta;
   let worksDesc;
+  let worksTags;
   let worksImage;
   let worksImageFallback;
   let worksIndex;
+  let worksTopIndex;
   let worksProgressBar;
   let worksClose;
   let worksProjectPrev;
@@ -94,9 +86,9 @@
   let worksMediaPrev;
   let worksMediaNext;
   let worksLink;
+  let worksStrip;
 
-  const pad = (value) => String(value).padStart(2, "0");
-
+  const pad = (value) => String(value).padStart(3, "0");
   const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
 
   const getProjectIdFromHash = () => {
@@ -119,9 +111,7 @@
 
   const updateHash = (projectId) => {
     const nextHash = hashFromProjectId(projectId);
-    if (window.location.hash !== nextHash) {
-      window.location.hash = nextHash;
-    }
+    if (window.location.hash !== nextHash) window.location.hash = nextHash;
   };
 
   const clearHash = () => {
@@ -187,6 +177,44 @@
     window.scrollTo(0, STATE.scrollY);
   };
 
+  const setTags = (project) => {
+    worksTags.innerHTML = "";
+    const tags = Array.isArray(project.tags) && project.tags.length ? project.tags : project.meta.split("•").map((item) => item.trim());
+
+    tags.slice(0, 3).forEach((tag) => {
+      const chip = document.createElement("span");
+      chip.className = "works-tag";
+      chip.textContent = tag;
+      worksTags.appendChild(chip);
+    });
+  };
+
+  const renderStrip = () => {
+    const currentProjectId = PROJECTS[STATE.projectIndex].id;
+    worksStrip.innerHTML = "";
+
+    PROJECTS.forEach((project, index) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "works-strip-card";
+      card.setAttribute("data-project-id", project.id);
+      card.setAttribute("aria-label", `Open ${project.title}`);
+      if (project.id === currentProjectId) card.classList.add("works-is-active");
+
+      card.innerHTML = `
+        <div class="works-strip-media">
+          <img src="${project.images[0] || ""}" alt="${project.title} preview" loading="lazy" decoding="async">
+        </div>
+        <div class="works-strip-copy">
+          <div class="works-strip-no">No.${pad(index + 1)}</div>
+          <div class="works-strip-title">${project.title}</div>
+        </div>
+      `;
+
+      worksStrip.appendChild(card);
+    });
+  };
+
   const updateImage = ({ animate = true } = {}) => {
     const project = PROJECTS[STATE.projectIndex];
     const totalImages = project.images.length || 1;
@@ -204,7 +232,7 @@
 
     window.setTimeout(() => {
       worksImage.classList.remove("works-is-swapping");
-    }, 240);
+    }, 220);
   };
 
   const renderProject = ({ animate = true } = {}) => {
@@ -213,32 +241,40 @@
 
     if (animate) worksPanel.classList.add("works-is-swapping");
 
-    worksTitle.textContent = project.title;
+    worksTitle.textContent = project.title.toUpperCase();
     worksMeta.textContent = project.meta;
     worksDesc.textContent = project.description;
+    setTags(project);
 
     if (project.link) {
       worksLink.href = project.link;
-      worksLink.hidden = false;
+      worksLink.target = "_blank";
+      worksLink.rel = "noopener";
+      worksLink.innerHTML = 'Visit Project <span aria-hidden="true">↗</span>';
     } else {
-      worksLink.hidden = true;
+      worksLink.href = "#contact";
+      worksLink.target = "_self";
+      worksLink.removeAttribute("rel");
+      worksLink.innerHTML = 'Contact Us <span aria-hidden="true">↗</span>';
     }
 
     const current = STATE.projectIndex + 1;
-    worksIndex.textContent = `${pad(current)}/${pad(PROJECTS.length)}`;
+    const formattedIndex = `No.${pad(current)}`;
+    worksIndex.textContent = formattedIndex;
+    worksTopIndex.textContent = formattedIndex;
     worksProgressBar.style.width = `${(current / PROJECTS.length) * 100}%`;
 
     if (STATE.imageIndex >= project.images.length) STATE.imageIndex = 0;
     updateImage({ animate });
 
+    renderStrip();
+
     const nextLazyImage = project.images[STATE.imageIndex + 1];
-    if (nextLazyImage) {
-      window.setTimeout(() => preloadImage(nextLazyImage), 120);
-    }
+    if (nextLazyImage) window.setTimeout(() => preloadImage(nextLazyImage), 120);
 
     window.setTimeout(() => {
       worksPanel.classList.remove("works-is-swapping");
-    }, 260);
+    }, 220);
   };
 
   const openWorksOverlay = (projectId, { updateUrl = true } = {}) => {
@@ -254,17 +290,13 @@
       STATE.lastFocus = document.activeElement;
       lockBodyScroll();
       worksOverlay.hidden = false;
-      requestAnimationFrame(() => {
-        worksOverlay.classList.add("works-is-open");
-      });
+      requestAnimationFrame(() => worksOverlay.classList.add("works-is-open"));
     }
 
     renderProject({ animate: !isNewOpen });
     if (updateUrl) updateHash(projectId);
 
-    window.setTimeout(() => {
-      worksClose.focus();
-    }, 50);
+    window.setTimeout(() => worksClose.focus(), 50);
   };
 
   const closeWorksOverlay = ({ clearUrl = true } = {}) => {
@@ -276,10 +308,8 @@
     window.setTimeout(() => {
       worksOverlay.hidden = true;
       unlockBodyScroll();
-      if (STATE.lastFocus && typeof STATE.lastFocus.focus === "function") {
-        STATE.lastFocus.focus();
-      }
-    }, 240);
+      if (STATE.lastFocus && typeof STATE.lastFocus.focus === "function") STATE.lastFocus.focus();
+    }, 200);
 
     if (clearUrl) clearHash();
   };
@@ -316,9 +346,6 @@
     const trigger = event.target.closest("[data-project-id]");
     if (!trigger) return;
 
-    const tag = trigger.tagName.toLowerCase();
-    if (!["a", "button", "div"].includes(tag)) return;
-
     const projectId = trigger.getAttribute("data-project-id");
     if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
 
@@ -354,27 +381,39 @@
     const existingOverlay = document.querySelector(".works-overlay");
     if (!existingOverlay) {
       document.body.insertAdjacentHTML(
-      "beforeend",
-      `
+        "beforeend",
+        `
       <div class="works-overlay" hidden>
         <div class="works-backdrop" data-works-close="backdrop"></div>
-        <section
-          class="works-panel"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="works-dialog-title"
-        >
-          <div class="works-header">
-            <div class="works-header-label">Works Showcase</div>
-            <button class="works-close" type="button" aria-label="Close works overlay">X</button>
+        <section class="works-panel" role="dialog" aria-modal="true" aria-labelledby="works-dialog-title">
+          <div class="works-marquee" aria-hidden="true">
+            <div class="works-marquee-track">
+              <span>WELCOME TO OUR NEW WEBSITE</span>
+              <span>BOOK CALL</span>
+              <span>WELCOME TO OUR NEW WEBSITE</span>
+              <span>BOOK CALL</span>
+              <span>WELCOME TO OUR NEW WEBSITE</span>
+              <span>BOOK CALL</span>
+            </div>
+          </div>
+
+          <div class="works-topbar">
+            <div class="works-brand">KAILEB</div>
+            <button class="works-close" type="button" aria-label="Close works overlay">CLOSE</button>
+          </div>
+
+          <div class="works-heading-row">
+            <h2 class="works-overlay-title" id="works-dialog-title"></h2>
+            <div class="works-heading-project">PROJECT</div>
+            <div class="works-top-index" aria-live="polite"></div>
           </div>
 
           <div class="works-grid">
             <article class="works-copy">
-              <h2 class="works-title" id="works-dialog-title"></h2>
-              <p class="works-meta"></p>
-              <p class="works-desc"></p>
-              <a class="works-link" href="#" target="_blank" rel="noopener">Visit Project <span aria-hidden="true">↗</span></a>
+              <div class="works-tags" aria-label="Project categories"></div>
+              <p class="works-overlay-meta"></p>
+              <p class="works-overlay-desc"></p>
+              <a class="works-link" href="#contact">Contact Us <span aria-hidden="true">↗</span></a>
             </article>
 
             <article class="works-media-shell">
@@ -389,13 +428,14 @@
             </article>
           </div>
 
+          <div class="works-more-label">MORE PROJECT</div>
+          <div class="works-strip" aria-label="Project list"></div>
+
           <div class="works-footer">
-            <button class="works-project-nav works-project-prev" type="button">Prev</button>
+            <button class="works-project-nav works-project-prev" type="button">Prev Project</button>
             <div class="works-index" aria-live="polite"></div>
-            <button class="works-project-nav works-project-next" type="button">Next</button>
-            <div class="works-progress" aria-hidden="true">
-              <span class="works-progress-bar"></span>
-            </div>
+            <button class="works-project-nav works-project-next" type="button">Next Project</button>
+            <div class="works-progress" aria-hidden="true"><span class="works-progress-bar"></span></div>
           </div>
         </section>
       </div>`
@@ -404,12 +444,14 @@
 
     worksOverlay = document.querySelector(".works-overlay");
     worksPanel = document.querySelector(".works-panel");
-    worksTitle = document.querySelector(".works-title");
-    worksMeta = document.querySelector(".works-meta");
-    worksDesc = document.querySelector(".works-desc");
+    worksTitle = document.querySelector(".works-overlay-title");
+    worksMeta = document.querySelector(".works-overlay-meta");
+    worksDesc = document.querySelector(".works-overlay-desc");
+    worksTags = document.querySelector(".works-tags");
     worksImage = document.querySelector(".works-image");
     worksImageFallback = document.querySelector(".works-image-fallback");
     worksIndex = document.querySelector(".works-index");
+    worksTopIndex = document.querySelector(".works-top-index");
     worksProgressBar = document.querySelector(".works-progress-bar");
     worksClose = document.querySelector(".works-close");
     worksProjectPrev = document.querySelector(".works-project-prev");
@@ -417,6 +459,7 @@
     worksMediaPrev = document.querySelector(".works-media-prev");
     worksMediaNext = document.querySelector(".works-media-next");
     worksLink = document.querySelector(".works-link");
+    worksStrip = document.querySelector(".works-strip");
 
     worksImage.addEventListener("error", () => {
       worksImageFallback.classList.add("works-is-visible");
@@ -431,6 +474,15 @@
     worksOverlay.addEventListener("click", (event) => {
       if (event.target.matches("[data-works-close='backdrop']")) {
         closeWorksOverlay();
+        return;
+      }
+
+      const card = event.target.closest(".works-strip-card[data-project-id]");
+      if (card) {
+        const projectId = card.getAttribute("data-project-id");
+        if (PROJECT_INDEX_BY_ID.has(projectId)) {
+          openWorksOverlay(projectId);
+        }
       }
     });
 
@@ -484,13 +536,17 @@
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      try {
-        init();
-      } catch (error) {
-        console.error("Works overlay failed to initialize:", error);
-      }
-    }, { once: true });
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        try {
+          init();
+        } catch (error) {
+          console.error("Works overlay failed to initialize:", error);
+        }
+      },
+      { once: true }
+    );
   } else {
     try {
       init();
