@@ -13,6 +13,7 @@
 
   --wrap: 83.75rem;
   --pad: 3.125rem;
+  --header-logo-offset: calc(var(--pad) * 0.25);
   --header-h: 4.875rem;
 
   --lift: -6.25rem;
@@ -115,7 +116,7 @@ main{
   display:block;
   line-height:0;
   color: transparent;
-  margin-left: -1.375rem;
+  margin-left: var(--header-logo-offset);
 }
 
 .logo img{
@@ -339,6 +340,8 @@ main{
   pointer-events:none;
   user-select:none;
   z-index: 5;
+  -webkit-mask-image: var(--mask-years-fade);
+          mask-image: var(--mask-years-fade);
   font-size: clamp(1.85rem, 6.1vw, 6.8rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -357,7 +360,7 @@ main{
   z-index: 1;
 }
 
-.bg-words div:nth-child(1){ opacity:.22; }
+.bg-words div:nth-child(1){ opacity:.14; }
 .bg-words div:nth-child(2){ opacity:.52; }
 .bg-words div:nth-child(3){ opacity:.52; }
 .bg-words div:nth-child(4){ opacity:.22; }
@@ -366,7 +369,7 @@ main{
   position:absolute;
   left: 1%;
   top: 17%;
-  width: 57%;
+  width: 45%;
   z-index: 20;
   border: clamp(0.125rem, 0.35vw, 0.1875rem) solid var(--color-border-strongest);
   padding: clamp(0.625rem, 1.8vw, 1.75rem) clamp(0.75rem, 2.6vw, 2.125rem);
@@ -684,6 +687,10 @@ main{
   position:absolute;
   inset: 0;
   display:block;
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+  transition: transform .45s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
 }
 
 .about-toggle .chevrons::before,
@@ -701,6 +708,10 @@ main{
 
 .about-toggle .chevrons::before{ top: 1.125rem; }
 .about-toggle .chevrons::after{ top: 2.125rem; }
+
+.about-toggle[aria-expanded="true"] .chevrons{
+  transform: rotate(180deg);
+}
 
 .about-photo{
   display:flex;
@@ -822,6 +833,10 @@ main{
 
 .works-bg span:first-child{ opacity: .9; }
 .works-bg span:last-child{ opacity: .75; }
+
+.works-bg-ewu{
+  display:none;
+}
 
 .works-layout{
   position: relative;
@@ -1180,13 +1195,32 @@ main{
     flex-basis: 100%;
   }
 
+  #services .service:first-child .pixels-left{
+    margin-bottom: 4rem;
+  }
+
   .contact-links{
     justify-content:flex-start;
   }
 
   /* Keep desktop works background active; only reorder TFS block content */
+  #works .works-layout{
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
   #works .work-group-tfs{
-    max-width: min(94vw, 25.1875rem);
+    order: 1;
+  }
+
+  #works .work-group-ewu{
+    order: 2;
+    position: relative;
+  }
+
+  #works .work-group-tfs{
+    max-width: min(62vw, 14rem);
   }
 
   #works .work-group-tfs > .work-card{
@@ -1195,24 +1229,38 @@ main{
 
   #works .work-group-tfs > .work-card:not(.is-tile-only) .work-tile{
     order: 1;
-    width: min(94vw, 25.1875rem);
+    width: min(62vw, 14rem);
     height: auto;
   }
 
   #works .work-group-tfs > .work-card.is-tile-only .work-tile{
     order: 2;
-    width: min(94vw, 25.1875rem);
+    width: min(62vw, 14rem);
     height: auto;
   }
 
   #works .work-group-tfs > .work-card .work-meta{
     order: 3;
-    width: min(94vw, 25.1875rem);
+    width: min(62vw, 14rem);
     max-width: 100%;
   }
 
   #works .work-group-ewu{
-    max-width: min(94vw, 25.1875rem);
+    max-width: min(62vw, 14rem);
+  }
+
+  #works .work-group-ewu .works-bg-ewu{
+    display:flex;
+    left: 50%;
+    top: 56%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+
+  #works .work-group-ewu .work-tile,
+  #works .work-group-ewu .work-meta{
+    position: relative;
+    z-index: 1;
   }
 
   #works .work-group-ewu > .work-card{
@@ -1221,20 +1269,30 @@ main{
 
   #works .work-group-ewu > .work-card:not(.is-tile-only) .work-tile{
     order: 1;
-    width: min(94vw, 25.1875rem);
+    width: min(62vw, 14rem);
     height: auto;
   }
 
   #works .work-group-ewu > .work-card.is-tile-only .work-tile{
     order: 2;
-    width: min(94vw, 25.1875rem);
+    width: min(62vw, 14rem);
     height: auto;
   }
 
   #works .work-group-ewu > .work-card .work-meta{
     order: 3;
-    width: min(94vw, 25.1875rem);
+    width: min(62vw, 14rem);
     max-width: 100%;
+  }
+
+  #works .works-bg{
+    top: 7.5rem;
+    gap: 2.5rem;
+  }
+
+  #works .works-bg span{
+    font-size: clamp(4.5rem, 16vw, 8.5rem);
+    letter-spacing: -0.06em;
   }
 }
 
@@ -1244,8 +1302,6 @@ main{
     background: var(--color-surface-primary);
     border-bottom: 0.0625rem solid var(--line);
   }
-
-  .logo{ margin-left: 0; }
 
   .connect{
     display:none;
@@ -1263,7 +1319,7 @@ main{
   .hello-box{
     left: 1.5%;
     top: 15.5%;
-    width: 62%;
+    width: 37%;
   }
 
   .hello-text{
@@ -1275,9 +1331,13 @@ main{
     top: 18.5%;
   }
 
+  .years p{
+    font-size: clamp(5.6rem, 22vw, 8.8rem);
+  }
+
   .bg-words{
     top: 9%;
-    font-size: clamp(1.3rem, 6.5vw, 2.5rem);
+    font-size: clamp(4.2rem, 19vw, 7.2rem);
   }
 
   .cursor-img{
@@ -1332,8 +1392,16 @@ main{
     padding: 0 1.25rem;
   }
 
+  #works .works-mobile-block:first-child{
+    order: 1;
+  }
+
+  #works .works-mobile-block:last-child{
+    order: 2;
+  }
+
   #works .works-mobile-block{
-    width: min(94vw, 25.1875rem);
+    width: min(44vw, 10rem);
     display:flex;
     flex-direction: column;
     gap: 1.75rem;
@@ -1356,7 +1424,7 @@ main{
   }
 
   #works .works-mobile .work-tile{
-    width: min(94vw, 25.1875rem);
+    width: min(44vw, 10rem);
     height: auto;
     overflow:hidden;
     border-radius: 0.125rem;
@@ -1374,7 +1442,7 @@ main{
     flex-direction: column;
     align-items:flex-start;
     gap: 0.5676rem;
-    width: min(94vw, 25.1875rem);
+    width: min(44vw, 10rem);
   }
 
   #works .works-mobile .work-meta-title{ font-size: 1rem; }
@@ -1391,11 +1459,16 @@ main{
 
   #works .work-secondary{
     position: relative;
-    width: min(94vw, 25.1875rem);
+    width: min(44vw, 10rem);
     display:flex;
     justify-content:center;
     margin-top: 0.375rem;
     padding: 1.75rem 0 0.625rem;
+  }
+
+  #works .work-secondary-bg-only{
+    margin-top: 0;
+    padding: 1rem 0 0.375rem;
   }
 
   #works .work-secondary .work-tile{
@@ -1409,8 +1482,8 @@ main{
     left: 50%;
     top: 0.5rem;
     transform: translateX(-50%);
-    width: 28.2108rem;
-    height: 6.2721rem;
+    width: min(36vw, 8rem);
+    height: 3rem;
     background: var(--gradient-works-inline);
     z-index: 0;
     pointer-events:none;
@@ -1475,6 +1548,7 @@ main{
   }
 
   #services .pixels-left{ height: 21.875rem; }
+  #services .service:first-child .pixels-left{ margin-bottom: 2.5rem; }
   #services .pixels-left .a{ width:7.5rem; height:11.25rem; left:0; top:0; }
   #services .pixels-left .b{ width:11.875rem; height:7.5rem; left:7.5rem; top:2.5rem; }
   #services .pixels-left .c{ width:8.75rem; height:12.5rem; left:0.625rem; top:9.375rem; }
