@@ -1,0 +1,501 @@
+(() => {
+  if (window.__worksOverlayInitialized) return;
+  window.__worksOverlayInitialized = true;
+
+  const PROJECTS = [
+    {
+      id: "project-1",
+      title: "Talk Fast Social",
+      meta: "Graphic Design • 2026",
+      description:
+        "Social-first campaign graphics and structured ad systems designed for speed, clarity, and brand consistency across client channels.",
+      images: [
+        "assets/images/TFS 1.jpg",
+        "assets/images/TFS 2.jpg"
+      ],
+      link: ""
+    },
+    {
+      id: "project-2",
+      title: "EWU Student Affairs",
+      meta: "Campus Communication • 2026",
+      description:
+        "Print and digital communication assets developed for student programs, events, and institutional announcements under the Dean of Students office.",
+      images: [
+        "assets/images/Student Affairs-251102-Dean on Call rack card- v1 (dragged)-1.png",
+        "assets/images/Student Affairs-251102-Dean on Call rack card- v1 (dragged) 2-1.png"
+      ],
+      link: ""
+    },
+    {
+      id: "project-3",
+      title: "Graphic Design",
+      meta: "Prints • Illustration • 2026",
+      description:
+        "A selection of poster, editorial, and visual system work focused on composition, hierarchy, and tactile graphic language.",
+      images: [
+        "assets/images/Calendar 1.png",
+        "assets/images/Poser Mag.png",
+        "assets/images/PAS 1.png"
+      ],
+      link: ""
+    },
+    {
+      id: "project-4",
+      title: "Branding",
+      meta: "Identity Systems • 2026",
+      description:
+        "Logo and brand identity explorations that align typography, color, and messaging into a cohesive, scalable system.",
+      images: [
+        "assets/images/PAS LOGO.png",
+        "assets/images/PAS 2.png",
+        "assets/images/PAS 1.png"
+      ],
+      link: ""
+    },
+    {
+      id: "project-5",
+      title: "UI/UX",
+      meta: "UI Design • Prototyping • 2026",
+      description:
+        "Interface and prototype studies balancing clarity, modern aesthetics, and purposeful interaction across screen sizes.",
+      images: [
+        "assets/images/MAISON-MARGIELA.png",
+        "assets/images/KlickyKitty.png",
+        "assets/images/drop-a-file.png"
+      ],
+      link: ""
+    }
+  ];
+
+  const STATE = {
+    isOpen: false,
+    projectIndex: 0,
+    imageIndex: 0,
+    scrollY: 0,
+    lastFocus: null
+  };
+
+  const PROJECT_INDEX_BY_ID = new Map(PROJECTS.map((project, index) => [project.id, index]));
+  const LOADED_IMAGES = new Set();
+
+  let worksOverlay;
+  let worksPanel;
+  let worksTitle;
+  let worksMeta;
+  let worksDesc;
+  let worksImage;
+  let worksImageFallback;
+  let worksIndex;
+  let worksProgressBar;
+  let worksClose;
+  let worksProjectPrev;
+  let worksProjectNext;
+  let worksMediaPrev;
+  let worksMediaNext;
+  let worksLink;
+
+  const pad = (value) => String(value).padStart(2, "0");
+
+  const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
+
+  const getProjectIdFromHash = () => {
+    if (!window.location.hash.startsWith("#work=")) return null;
+    const id = window.location.hash.slice(6);
+    if (!id) return null;
+    return decodeURIComponent(id);
+  };
+
+  const preloadImage = (src) => {
+    if (!src || LOADED_IMAGES.has(src)) return;
+    const img = new Image();
+    img.src = src;
+    LOADED_IMAGES.add(src);
+  };
+
+  const preloadFirstImages = () => {
+    PROJECTS.forEach((project) => preloadImage(project.images[0]));
+  };
+
+  const updateHash = (projectId) => {
+    const nextHash = hashFromProjectId(projectId);
+    if (window.location.hash !== nextHash) {
+      window.location.hash = nextHash;
+    }
+  };
+
+  const clearHash = () => {
+    const cleanUrl = `${window.location.pathname}${window.location.search}`;
+    window.history.replaceState(null, "", cleanUrl);
+  };
+
+  const getFocusableElements = () => {
+    if (!worksOverlay) return [];
+    const isVisible = (el) => {
+      const style = window.getComputedStyle(el);
+      return style.display !== "none" && style.visibility !== "hidden" && !el.hasAttribute("hidden");
+    };
+
+    return Array.from(
+      worksOverlay.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => isVisible(el));
+  };
+
+  const trapFocus = (event) => {
+    if (!STATE.isOpen || event.key !== "Tab") return;
+
+    const focusables = getFocusableElements();
+    if (!focusables.length) {
+      event.preventDefault();
+      return;
+    }
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+      return;
+    }
+
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  const lockBodyScroll = () => {
+    STATE.scrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.classList.add("works-lock");
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${STATE.scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+  };
+
+  const unlockBodyScroll = () => {
+    document.body.classList.remove("works-lock");
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    window.scrollTo(0, STATE.scrollY);
+  };
+
+  const updateImage = ({ animate = true } = {}) => {
+    const project = PROJECTS[STATE.projectIndex];
+    const totalImages = project.images.length || 1;
+    const imageSrc = project.images[STATE.imageIndex] || project.images[0] || "";
+
+    if (animate) worksImage.classList.add("works-is-swapping");
+    if (imageSrc) preloadImage(imageSrc);
+
+    worksImageFallback.classList.remove("works-is-visible");
+    worksImage.alt = `${project.title} preview ${STATE.imageIndex + 1}`;
+    worksImage.src = imageSrc;
+
+    worksMediaPrev.disabled = totalImages <= 1;
+    worksMediaNext.disabled = totalImages <= 1;
+
+    window.setTimeout(() => {
+      worksImage.classList.remove("works-is-swapping");
+    }, 240);
+  };
+
+  const renderProject = ({ animate = true } = {}) => {
+    const project = PROJECTS[STATE.projectIndex];
+    if (!project) return;
+
+    if (animate) worksPanel.classList.add("works-is-swapping");
+
+    worksTitle.textContent = project.title;
+    worksMeta.textContent = project.meta;
+    worksDesc.textContent = project.description;
+
+    if (project.link) {
+      worksLink.href = project.link;
+      worksLink.hidden = false;
+    } else {
+      worksLink.hidden = true;
+    }
+
+    const current = STATE.projectIndex + 1;
+    worksIndex.textContent = `${pad(current)}/${pad(PROJECTS.length)}`;
+    worksProgressBar.style.width = `${(current / PROJECTS.length) * 100}%`;
+
+    if (STATE.imageIndex >= project.images.length) STATE.imageIndex = 0;
+    updateImage({ animate });
+
+    const nextLazyImage = project.images[STATE.imageIndex + 1];
+    if (nextLazyImage) {
+      window.setTimeout(() => preloadImage(nextLazyImage), 120);
+    }
+
+    window.setTimeout(() => {
+      worksPanel.classList.remove("works-is-swapping");
+    }, 260);
+  };
+
+  const openWorksOverlay = (projectId, { updateUrl = true } = {}) => {
+    const nextProjectIndex = PROJECT_INDEX_BY_ID.get(projectId);
+    if (typeof nextProjectIndex !== "number") return;
+
+    const isNewOpen = !STATE.isOpen;
+    STATE.projectIndex = nextProjectIndex;
+    STATE.imageIndex = 0;
+
+    if (isNewOpen) {
+      STATE.isOpen = true;
+      STATE.lastFocus = document.activeElement;
+      lockBodyScroll();
+      worksOverlay.hidden = false;
+      requestAnimationFrame(() => {
+        worksOverlay.classList.add("works-is-open");
+      });
+    }
+
+    renderProject({ animate: !isNewOpen });
+    if (updateUrl) updateHash(projectId);
+
+    window.setTimeout(() => {
+      worksClose.focus();
+    }, 50);
+  };
+
+  const closeWorksOverlay = ({ clearUrl = true } = {}) => {
+    if (!STATE.isOpen) return;
+
+    STATE.isOpen = false;
+    worksOverlay.classList.remove("works-is-open");
+
+    window.setTimeout(() => {
+      worksOverlay.hidden = true;
+      unlockBodyScroll();
+      if (STATE.lastFocus && typeof STATE.lastFocus.focus === "function") {
+        STATE.lastFocus.focus();
+      }
+    }, 240);
+
+    if (clearUrl) clearHash();
+  };
+
+  const goToNextProject = () => {
+    STATE.projectIndex = (STATE.projectIndex + 1) % PROJECTS.length;
+    STATE.imageIndex = 0;
+    renderProject();
+    updateHash(PROJECTS[STATE.projectIndex].id);
+  };
+
+  const goToPrevProject = () => {
+    STATE.projectIndex = (STATE.projectIndex - 1 + PROJECTS.length) % PROJECTS.length;
+    STATE.imageIndex = 0;
+    renderProject();
+    updateHash(PROJECTS[STATE.projectIndex].id);
+  };
+
+  const goToNextImage = () => {
+    const project = PROJECTS[STATE.projectIndex];
+    if (!project || project.images.length <= 1) return;
+    STATE.imageIndex = (STATE.imageIndex + 1) % project.images.length;
+    updateImage();
+  };
+
+  const goToPrevImage = () => {
+    const project = PROJECTS[STATE.projectIndex];
+    if (!project || project.images.length <= 1) return;
+    STATE.imageIndex = (STATE.imageIndex - 1 + project.images.length) % project.images.length;
+    updateImage();
+  };
+
+  const onDocumentClick = (event) => {
+    const trigger = event.target.closest("[data-project-id]");
+    if (!trigger) return;
+
+    const tag = trigger.tagName.toLowerCase();
+    if (!["a", "button", "div"].includes(tag)) return;
+
+    const projectId = trigger.getAttribute("data-project-id");
+    if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
+
+    event.preventDefault();
+    openWorksOverlay(projectId);
+  };
+
+  const onOverlayKeydown = (event) => {
+    if (!STATE.isOpen) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeWorksOverlay();
+      return;
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goToNextProject();
+      return;
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goToPrevProject();
+      return;
+    }
+
+    trapFocus(event);
+  };
+
+  const injectWorksOverlay = () => {
+    const existingOverlay = document.querySelector(".works-overlay");
+    if (!existingOverlay) {
+      document.body.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="works-overlay" hidden>
+        <div class="works-backdrop" data-works-close="backdrop"></div>
+        <section
+          class="works-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="works-dialog-title"
+        >
+          <div class="works-header">
+            <div class="works-header-label">Works Showcase</div>
+            <button class="works-close" type="button" aria-label="Close works overlay">X</button>
+          </div>
+
+          <div class="works-grid">
+            <article class="works-copy">
+              <h2 class="works-title" id="works-dialog-title"></h2>
+              <p class="works-meta"></p>
+              <p class="works-desc"></p>
+              <a class="works-link" href="#" target="_blank" rel="noopener">Visit Project <span aria-hidden="true">↗</span></a>
+            </article>
+
+            <article class="works-media-shell">
+              <div class="works-media">
+                <button class="works-media-nav works-media-prev" type="button" aria-label="Previous image">←</button>
+                <div class="works-media-frame">
+                  <img class="works-image" src="" alt="" loading="eager" decoding="async">
+                  <div class="works-image-fallback" role="status" aria-live="polite">Preview image unavailable.</div>
+                </div>
+                <button class="works-media-nav works-media-next" type="button" aria-label="Next image">→</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="works-footer">
+            <button class="works-project-nav works-project-prev" type="button">Prev</button>
+            <div class="works-index" aria-live="polite"></div>
+            <button class="works-project-nav works-project-next" type="button">Next</button>
+            <div class="works-progress" aria-hidden="true">
+              <span class="works-progress-bar"></span>
+            </div>
+          </div>
+        </section>
+      </div>`
+      );
+    }
+
+    worksOverlay = document.querySelector(".works-overlay");
+    worksPanel = document.querySelector(".works-panel");
+    worksTitle = document.querySelector(".works-title");
+    worksMeta = document.querySelector(".works-meta");
+    worksDesc = document.querySelector(".works-desc");
+    worksImage = document.querySelector(".works-image");
+    worksImageFallback = document.querySelector(".works-image-fallback");
+    worksIndex = document.querySelector(".works-index");
+    worksProgressBar = document.querySelector(".works-progress-bar");
+    worksClose = document.querySelector(".works-close");
+    worksProjectPrev = document.querySelector(".works-project-prev");
+    worksProjectNext = document.querySelector(".works-project-next");
+    worksMediaPrev = document.querySelector(".works-media-prev");
+    worksMediaNext = document.querySelector(".works-media-next");
+    worksLink = document.querySelector(".works-link");
+
+    worksImage.addEventListener("error", () => {
+      worksImageFallback.classList.add("works-is-visible");
+    });
+
+    worksImage.addEventListener("load", () => {
+      worksImageFallback.classList.remove("works-is-visible");
+    });
+
+    worksClose.addEventListener("click", () => closeWorksOverlay());
+
+    worksOverlay.addEventListener("click", (event) => {
+      if (event.target.matches("[data-works-close='backdrop']")) {
+        closeWorksOverlay();
+      }
+    });
+
+    worksProjectPrev.addEventListener("click", goToPrevProject);
+    worksProjectNext.addEventListener("click", goToNextProject);
+    worksMediaPrev.addEventListener("click", goToPrevImage);
+    worksMediaNext.addEventListener("click", goToNextImage);
+
+    document.addEventListener("keydown", onOverlayKeydown);
+  };
+
+  const bindProjectTriggers = () => {
+    const triggers = Array.from(document.querySelectorAll("[data-project-id]"));
+    triggers.forEach((trigger) => {
+      if (trigger.dataset.worksBound === "true") return;
+      trigger.dataset.worksBound = "true";
+      trigger.addEventListener("click", (event) => {
+        const projectId = trigger.getAttribute("data-project-id");
+        if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
+        event.preventDefault();
+        openWorksOverlay(projectId);
+      });
+    });
+  };
+
+  const init = () => {
+    injectWorksOverlay();
+    preloadFirstImages();
+    bindProjectTriggers();
+
+    document.addEventListener("click", onDocumentClick, true);
+
+    window.addEventListener("hashchange", () => {
+      const idFromHash = getProjectIdFromHash();
+      if (idFromHash && PROJECT_INDEX_BY_ID.has(idFromHash)) {
+        openWorksOverlay(idFromHash, { updateUrl: false });
+      } else if (STATE.isOpen) {
+        closeWorksOverlay({ clearUrl: false });
+      }
+    });
+
+    const idFromInitialHash = getProjectIdFromHash();
+    if (idFromInitialHash && PROJECT_INDEX_BY_ID.has(idFromInitialHash)) {
+      openWorksOverlay(idFromInitialHash, { updateUrl: false });
+    }
+
+    window.openWorksOverlayById = (projectId) => {
+      if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
+      openWorksOverlay(projectId);
+    };
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        init();
+      } catch (error) {
+        console.error("Works overlay failed to initialize:", error);
+      }
+    }, { once: true });
+  } else {
+    try {
+      init();
+    } catch (error) {
+      console.error("Works overlay failed to initialize:", error);
+    }
+  }
+})();
