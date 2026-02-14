@@ -27,13 +27,34 @@
       link: ""
     },
     {
-      id: "project-3",
-      title: "Graphic Design",
-      meta: "Prints • Illustration • 2026",
-      description:
-        "A selection of poster, editorial, and visual system work focused on composition, hierarchy, and tactile graphic language.",
-      tags: ["Prints", "Graphics", "Illustration"],
-      images: ["assets/images/Calendar 1.png", "assets/images/Poser Mag.png", "assets/images/PAS 1.png"],
+      id: "graphic-1",
+      title: "Calendar Poster",
+      meta: "Graphic Design • 2026",
+      description: "Poster concept focused on hierarchy, pacing, and high-contrast composition.",
+      tags: ["Graphics", "Print", "Poster"],
+      images: ["assets/images/Calendar 1.png"],
+      mediaThumb: "assets/images/Calendar 1.png",
+      link: ""
+    },
+    {
+      id: "graphic-2",
+      title: "Poser Magazine",
+      meta: "Graphic Design • 2026",
+      description: "Editorial cover study built around expressive typography and fashion-forward art direction.",
+      tags: ["Graphics", "Editorial", "Print"],
+      images: ["assets/images/Poser Mag.png"],
+      mediaThumb: "assets/images/Poser Mag.png",
+      link: ""
+    },
+    {
+      id: "graphic-3",
+      title: "As We Were In Dreams",
+      meta: "Graphic Motion • 2026",
+      description: "A standalone motion piece from the graphics set, treated as its own project.",
+      tags: ["Graphics", "Motion", "Video"],
+      images: ["assets/images/as-we-were-in-dreams.mp4"],
+      mediaThumb: "assets/images/as-we-were-in-dreams.mp4",
+      mediaPoster: "assets/images/as-we-were-in-dreams-poster.jpg",
       link: ""
     },
     {
@@ -47,13 +68,33 @@
       link: ""
     },
     {
-      id: "project-5",
-      title: "UI/UX",
-      meta: "UI Design • Prototyping • 2026",
-      description:
-        "Interface and prototype studies balancing clarity, modern aesthetics, and purposeful interaction across screen sizes.",
+      id: "uiux-1",
+      title: "Maison Margiela",
+      meta: "UI/UX • 2026",
+      description: "High-fashion inspired interface exploration with cinematic composition and strong contrast.",
+      tags: ["UI", "UX", "Visual"],
+      images: ["assets/images/MAISON-MARGIELA.png"],
+      mediaThumb: "assets/images/MAISON-MARGIELA.png",
+      link: ""
+    },
+    {
+      id: "uiux-2",
+      title: "KlickyKitty",
+      meta: "UI/UX • 2026",
+      description: "Playful product interface system with clear hierarchy and prototype-ready components.",
       tags: ["UI", "UX", "Prototype"],
-      images: ["assets/images/MAISON-MARGIELA.png", "assets/images/KlickyKitty.png", "assets/images/drop-a-file.png"],
+      images: ["assets/images/KlickyKitty.png"],
+      mediaThumb: "assets/images/KlickyKitty.png",
+      link: ""
+    },
+    {
+      id: "uiux-3",
+      title: "Drop A File",
+      meta: "UI/UX • 2026",
+      description: "Workflow-focused upload interface concept optimized for clarity and quick actions.",
+      tags: ["UI", "UX", "Interaction"],
+      images: ["assets/images/drop-a-file.png"],
+      mediaThumb: "assets/images/drop-a-file.png",
       link: ""
     }
   ];
@@ -71,14 +112,16 @@
 
   let worksOverlay;
   let worksPanel;
-  let worksTitle;
+  let worksTitleNodes;
+  let worksDialogTitle;
   let worksMeta;
   let worksDesc;
   let worksTags;
   let worksImage;
+  let worksVideo;
   let worksImageFallback;
   let worksIndex;
-  let worksTopIndex;
+  let worksTopIndexNodes;
   let worksProgressBar;
   let worksClose;
   let worksProjectPrev;
@@ -90,6 +133,8 @@
 
   const pad = (value) => String(value).padStart(3, "0");
   const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
+  const isVideoSrc = (src) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(src || "");
+  const normalizeMediaSrc = (src) => encodeURI(src || "").replace(/#/g, "%23");
 
   const getProjectIdFromHash = () => {
     if (!window.location.hash.startsWith("#work=")) return null;
@@ -106,7 +151,10 @@
   };
 
   const preloadFirstImages = () => {
-    PROJECTS.forEach((project) => preloadImage(project.images[0]));
+    PROJECTS.forEach((project) => {
+      const firstImage = project.images.find((src) => !isVideoSrc(src));
+      preloadImage(firstImage);
+    });
   };
 
   const updateHash = (projectId) => {
@@ -192,8 +240,11 @@
   const renderStrip = () => {
     const currentProjectId = PROJECTS[STATE.projectIndex].id;
     worksStrip.innerHTML = "";
+    const track = document.createElement("div");
+    track.className = "works-strip-track";
 
-    PROJECTS.forEach((project, index) => {
+    const marqueeItems = [...PROJECTS, ...PROJECTS];
+    marqueeItems.forEach((project, index) => {
       const card = document.createElement("button");
       card.type = "button";
       card.className = "works-strip-card";
@@ -201,31 +252,65 @@
       card.setAttribute("aria-label", `Open ${project.title}`);
       if (project.id === currentProjectId) card.classList.add("works-is-active");
 
+      const thumbSrc = project.id === "graphic-3"
+        ? (project.images[0] || "")
+        : (project.mediaThumb || project.images.find((src) => !isVideoSrc(src)) || "");
+      const thumbIsVideo = project.id === "graphic-3" || isVideoSrc(thumbSrc);
+      const safeThumbSrc = normalizeMediaSrc(thumbSrc);
+      const thumbMarkup = thumbIsVideo
+        ? `<video muted loop autoplay playsinline aria-label="${project.title} preview video"><source src="${safeThumbSrc}" type="video/mp4"></video>`
+        : `<img src="${safeThumbSrc}" alt="${project.title} preview" loading="lazy" decoding="async">`;
+
       card.innerHTML = `
         <div class="works-strip-media">
-          <img src="${project.images[0] || ""}" alt="${project.title} preview" loading="lazy" decoding="async">
+          ${thumbMarkup}
         </div>
         <div class="works-strip-copy">
-          <div class="works-strip-no">No.${pad(index + 1)}</div>
+          <div class="works-strip-no">No.${pad((index % PROJECTS.length) + 1)}</div>
           <div class="works-strip-title">${project.title}</div>
         </div>
       `;
 
-      worksStrip.appendChild(card);
+      track.appendChild(card);
     });
+
+    worksStrip.appendChild(track);
   };
 
   const updateImage = ({ animate = true } = {}) => {
     const project = PROJECTS[STATE.projectIndex];
     const totalImages = project.images.length || 1;
-    const imageSrc = project.images[STATE.imageIndex] || project.images[0] || "";
+    const mediaSrc = project.images[STATE.imageIndex] || project.images[0] || "";
+    const safeMediaSrc = normalizeMediaSrc(mediaSrc);
+    const mediaIsVideo = project.id === "graphic-3" || isVideoSrc(mediaSrc);
 
     if (animate) worksImage.classList.add("works-is-swapping");
-    if (imageSrc) preloadImage(imageSrc);
+    if (!mediaIsVideo && mediaSrc) preloadImage(mediaSrc);
 
     worksImageFallback.classList.remove("works-is-visible");
-    worksImage.alt = `${project.title} preview ${STATE.imageIndex + 1}`;
-    worksImage.src = imageSrc;
+    if (mediaIsVideo) {
+      worksImage.hidden = true;
+      worksImage.style.display = "none";
+      worksImage.src = "";
+      worksImage.alt = "";
+      worksVideo.hidden = false;
+      worksVideo.style.display = "block";
+      worksVideo.poster = normalizeMediaSrc(project.mediaPoster || "");
+      worksVideo.innerHTML = `<source src="${safeMediaSrc}" type="video/mp4">`;
+      worksVideo.load();
+      worksVideo.play().catch(() => {});
+    } else {
+      worksVideo.pause();
+      worksVideo.removeAttribute("src");
+      worksVideo.poster = "";
+      worksVideo.load();
+      worksVideo.hidden = true;
+      worksVideo.style.display = "none";
+      worksImage.hidden = false;
+      worksImage.style.display = "block";
+      worksImage.alt = `${project.title} preview ${STATE.imageIndex + 1}`;
+      worksImage.src = safeMediaSrc;
+    }
 
     worksMediaPrev.disabled = totalImages <= 1;
     worksMediaNext.disabled = totalImages <= 1;
@@ -241,7 +326,11 @@
 
     if (animate) worksPanel.classList.add("works-is-swapping");
 
-    worksTitle.textContent = project.title.toUpperCase();
+    const nextTitle = project.title.toUpperCase();
+    worksDialogTitle.textContent = nextTitle;
+    worksTitleNodes.forEach((node) => {
+      node.textContent = nextTitle;
+    });
     worksMeta.textContent = project.meta;
     worksDesc.textContent = project.description;
     setTags(project);
@@ -255,13 +344,15 @@
       worksLink.href = "#contact";
       worksLink.target = "_self";
       worksLink.removeAttribute("rel");
-      worksLink.innerHTML = 'Contact Us <span aria-hidden="true">↗</span>';
+      worksLink.innerHTML = 'Contact <span aria-hidden="true">↗</span>';
     }
 
     const current = STATE.projectIndex + 1;
     const formattedIndex = `No.${pad(current)}`;
     worksIndex.textContent = formattedIndex;
-    worksTopIndex.textContent = formattedIndex;
+    worksTopIndexNodes.forEach((node) => {
+      node.textContent = formattedIndex;
+    });
     worksProgressBar.style.width = `${(current / PROJECTS.length) * 100}%`;
 
     if (STATE.imageIndex >= project.images.length) STATE.imageIndex = 0;
@@ -270,7 +361,7 @@
     renderStrip();
 
     const nextLazyImage = project.images[STATE.imageIndex + 1];
-    if (nextLazyImage) window.setTimeout(() => preloadImage(nextLazyImage), 120);
+    if (nextLazyImage && !isVideoSrc(nextLazyImage)) window.setTimeout(() => preloadImage(nextLazyImage), 120);
 
     window.setTimeout(() => {
       worksPanel.classList.remove("works-is-swapping");
@@ -386,26 +477,23 @@
       <div class="works-overlay" hidden>
         <div class="works-backdrop" data-works-close="backdrop"></div>
         <section class="works-panel" role="dialog" aria-modal="true" aria-labelledby="works-dialog-title">
-          <div class="works-marquee" aria-hidden="true">
-            <div class="works-marquee-track">
-              <span>WELCOME TO OUR NEW WEBSITE</span>
-              <span>BOOK CALL</span>
-              <span>WELCOME TO OUR NEW WEBSITE</span>
-              <span>BOOK CALL</span>
-              <span>WELCOME TO OUR NEW WEBSITE</span>
-              <span>BOOK CALL</span>
-            </div>
-          </div>
-
           <div class="works-topbar">
             <div class="works-brand">KAILEB</div>
             <button class="works-close" type="button" aria-label="Close works overlay">CLOSE</button>
           </div>
 
           <div class="works-heading-row">
-            <h2 class="works-overlay-title" id="works-dialog-title"></h2>
-            <div class="works-heading-project">PROJECT</div>
-            <div class="works-top-index" aria-live="polite"></div>
+            <h2 class="works-dialog-title" id="works-dialog-title"></h2>
+            <div class="works-heading-marquee" aria-hidden="true">
+              <div class="works-heading-track">
+                <span class="works-overlay-title"></span>
+                <span class="works-heading-project">PROJECT</span>
+                <span class="works-top-index"></span>
+                <span class="works-overlay-title"></span>
+                <span class="works-heading-project">PROJECT</span>
+                <span class="works-top-index"></span>
+              </div>
+            </div>
           </div>
 
           <div class="works-grid">
@@ -413,7 +501,11 @@
               <div class="works-tags" aria-label="Project categories"></div>
               <p class="works-overlay-meta"></p>
               <p class="works-overlay-desc"></p>
-              <a class="works-link" href="#contact">Contact Us <span aria-hidden="true">↗</span></a>
+              <div class="works-actions">
+                <div class="works-more-label">MORE PROJECTS</div>
+                <a class="works-link" href="#contact">Contact <span aria-hidden="true">↗</span></a>
+              </div>
+              <div class="works-strip" aria-label="Project list"></div>
             </article>
 
             <article class="works-media-shell">
@@ -421,15 +513,13 @@
                 <button class="works-media-nav works-media-prev" type="button" aria-label="Previous image">←</button>
                 <div class="works-media-frame">
                   <img class="works-image" src="" alt="" loading="eager" decoding="async">
+                  <video class="works-video" playsinline muted loop controls hidden></video>
                   <div class="works-image-fallback" role="status" aria-live="polite">Preview image unavailable.</div>
                 </div>
                 <button class="works-media-nav works-media-next" type="button" aria-label="Next image">→</button>
               </div>
             </article>
           </div>
-
-          <div class="works-more-label">MORE PROJECT</div>
-          <div class="works-strip" aria-label="Project list"></div>
 
           <div class="works-footer">
             <button class="works-project-nav works-project-prev" type="button">Prev Project</button>
@@ -444,14 +534,16 @@
 
     worksOverlay = document.querySelector(".works-overlay");
     worksPanel = document.querySelector(".works-panel");
-    worksTitle = document.querySelector(".works-overlay-title");
+    worksTitleNodes = Array.from(document.querySelectorAll(".works-overlay-title"));
+    worksDialogTitle = document.querySelector(".works-dialog-title");
     worksMeta = document.querySelector(".works-overlay-meta");
     worksDesc = document.querySelector(".works-overlay-desc");
     worksTags = document.querySelector(".works-tags");
     worksImage = document.querySelector(".works-image");
+    worksVideo = document.querySelector(".works-video");
     worksImageFallback = document.querySelector(".works-image-fallback");
     worksIndex = document.querySelector(".works-index");
-    worksTopIndex = document.querySelector(".works-top-index");
+    worksTopIndexNodes = Array.from(document.querySelectorAll(".works-top-index"));
     worksProgressBar = document.querySelector(".works-progress-bar");
     worksClose = document.querySelector(".works-close");
     worksProjectPrev = document.querySelector(".works-project-prev");
@@ -467,6 +559,19 @@
 
     worksImage.addEventListener("load", () => {
       worksImageFallback.classList.remove("works-is-visible");
+    });
+    worksVideo.addEventListener("loadeddata", () => {
+      worksImageFallback.classList.remove("works-is-visible");
+      if (worksVideo.currentTime === 0) {
+        try {
+          worksVideo.currentTime = 0.1;
+        } catch (error) {
+          /* ignore seek errors */
+        }
+      }
+    });
+    worksVideo.addEventListener("error", () => {
+      worksImageFallback.classList.add("works-is-visible");
     });
 
     worksClose.addEventListener("click", () => closeWorksOverlay());

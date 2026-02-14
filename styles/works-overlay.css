@@ -30,41 +30,13 @@
   color: var(--fg, #101010);
   overflow: hidden;
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   transform: translateY(0.5rem);
   transition: transform 220ms ease;
 }
 
 .works-overlay.works-is-open .works-panel {
   transform: translateY(0);
-}
-
-.works-marquee {
-  border-bottom: 0.0625rem solid var(--line-strong, #111);
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.works-marquee-track {
-  display: inline-flex;
-  gap: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0.7;
-}
-
-.works-marquee-track span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.works-marquee-track span:nth-child(even) {
-  border: 0.0625rem solid var(--line-strong, #111);
-  border-radius: 0.35rem;
-  padding: 0.05rem 0.35rem;
 }
 
 .works-topbar {
@@ -94,11 +66,32 @@
 
 .works-heading-row {
   border-bottom: 0.0625rem solid var(--line-strong, #111);
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  overflow: hidden;
+}
+
+.works-dialog-title {
+  position: absolute;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  margin: -0.0625rem;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.works-heading-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.works-heading-track {
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  min-width: max-content;
   padding: 0.5rem 0.8rem;
+  animation: worksHeadingMarquee 14s linear infinite;
 }
 
 .works-overlay-title,
@@ -125,20 +118,40 @@
   text-transform: uppercase;
 }
 
+@keyframes worksHeadingMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .works-grid {
+  --works-left-col: 47%;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(26rem, 52%);
+  grid-template-columns: minmax(0, var(--works-left-col)) minmax(0, 1fr);
   gap: 0.55rem;
   padding: 0.55rem;
 }
 
 .works-copy {
+  grid-column: 1;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto auto;
   align-content: start;
   gap: 0.65rem;
   min-height: 0;
+}
+
+.works-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
 }
 
 .works-tags {
@@ -189,6 +202,7 @@
 }
 
 .works-media-shell {
+  grid-column: 2;
   min-height: 0;
 }
 
@@ -253,36 +267,49 @@
 }
 
 .works-more-label {
-  margin: 0 0.55rem;
+  width: fit-content;
+  margin: 0;
   border: 0.0625rem solid var(--line-strong, #111);
   border-radius: 1rem;
-  padding: 0.35rem 0.95rem;
+  padding: 0.45rem 1rem;
   font-size: clamp(1rem, 1.5vw, 2rem);
   font-weight: 700;
   text-transform: uppercase;
 }
 
 .works-strip {
-  margin: 0.45rem 0.55rem 0.55rem;
+  width: 100%;
+  margin: 0.3rem 0 0;
   border: 0.0625rem solid var(--line-strong, #111);
   border-radius: 1rem;
-  padding: 0.45rem;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.45rem;
+  padding: 0.22rem;
+  overflow: hidden;
+}
+
+.works-strip-track {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: max-content;
+  animation: worksProjectsMarquee 22s linear infinite;
+}
+
+.works-strip:hover .works-strip-track {
+  animation-play-state: paused;
 }
 
 .works-strip-card {
   border: 0.0625rem solid transparent;
-  border-radius: 0.75rem;
+  border-radius: 0.6rem;
   background: transparent;
   color: inherit;
   text-align: left;
-  padding: 0.25rem;
+  padding: 0.18rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
   align-items: center;
   cursor: pointer;
+  min-width: clamp(8.5rem, 11vw, 11.5rem);
 }
 
 .works-strip-card.works-is-active {
@@ -291,10 +318,10 @@
 }
 
 .works-strip-media {
-  width: clamp(2.6rem, 4.5vw, 5.5rem);
+  width: clamp(1.8rem, 2.8vw, 3.4rem);
   aspect-ratio: 1 / 1;
   border: 0.0625rem solid var(--line-strong, #111);
-  border-radius: 0.55rem;
+  border-radius: 0.45rem;
   overflow: hidden;
   flex-shrink: 0;
   background: #080808;
@@ -306,14 +333,21 @@
   object-fit: cover;
 }
 
+.works-strip-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .works-strip-no {
-  font-size: 0.85rem;
+  font-size: 0.58rem;
   opacity: 0.75;
   text-transform: uppercase;
 }
 
 .works-strip-title {
-  font-size: clamp(0.9rem, 1.2vw, 1.5rem);
+  font-size: clamp(0.62rem, 0.8vw, 0.92rem);
   font-weight: 700;
   text-transform: uppercase;
   line-height: 1.15;
@@ -363,6 +397,15 @@
   transition: width 220ms ease;
 }
 
+@keyframes worksProjectsMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .works-overlay .works-is-swapping {
   animation: worksSwap 220ms ease;
 }
@@ -384,11 +427,8 @@ body.works-lock {
 
 @media (max-width: 1100px) {
   .works-grid {
+    --works-left-col: 50%;
     grid-template-columns: 1fr 1fr;
-  }
-
-  .works-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -396,25 +436,36 @@ body.works-lock {
   .works-panel {
     inset: 0.2rem;
     border-radius: 1rem;
-    grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
   }
 
   .works-heading-row {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
+    overflow: hidden;
   }
 
   .works-heading-project {
-    text-align: left;
+    text-align: center;
   }
 
   .works-grid {
+    --works-left-col: 100%;
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(15rem, 38vh);
   }
 
+  .works-copy,
+  .works-media-shell {
+    grid-column: auto;
+  }
+
+  .works-more-label,
   .works-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: auto;
+  }
+
+  .works-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .works-footer {
@@ -440,7 +491,7 @@ body.works-lock {
   }
 
   .works-heading-row {
-    padding: 0.35rem 0.55rem;
+    overflow: hidden;
   }
 
   .works-grid {
@@ -454,7 +505,6 @@ body.works-lock {
 
   .works-strip {
     margin: 0.35rem 0.4rem 0.4rem;
-    grid-template-columns: 1fr;
   }
 
   .works-footer {
@@ -472,4 +522,20 @@ body.works-lock {
   .works-overlay .works-is-swapping {
     animation: none !important;
   }
+
+  .works-heading-track {
+    animation: none !important;
+  }
+
+  .works-strip-track {
+    animation: none !important;
+  }
+}
+
+.works-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
 }
