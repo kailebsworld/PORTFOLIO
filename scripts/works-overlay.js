@@ -142,7 +142,13 @@
   const pad = (value) => String(value).padStart(3, "0");
   const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
   const isVideoSrc = (src) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(src || "");
-  const normalizeMediaSrc = (src) => encodeURI(src || "").replace(/#/g, "%23");
+  const normalizeMediaSrc = (src) => {
+    try {
+      return encodeURI(src || "").replace(/#/g, "%23");
+    } catch (error) {
+      return "";
+    }
+  };
   const toFigmaEmbedUrl = (url) =>
     `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url || "")}`;
 
@@ -237,7 +243,10 @@
 
   const setTags = (project) => {
     worksTags.innerHTML = "";
-    const tags = Array.isArray(project.tags) && project.tags.length ? project.tags : project.meta.split("•").map((item) => item.trim());
+    const fallbackMeta = typeof project.meta === "string" ? project.meta : "";
+    const tags = Array.isArray(project.tags) && project.tags.length
+      ? project.tags
+      : fallbackMeta.split("•").map((item) => item.trim()).filter(Boolean);
 
     tags.slice(0, 3).forEach((tag) => {
       const chip = document.createElement("span");
@@ -422,7 +431,9 @@
     renderProject({ animate: !isNewOpen });
     if (updateUrl) updateHash(projectId);
 
-    window.setTimeout(() => worksClose.focus(), 50);
+    window.setTimeout(() => {
+      if (worksClose && typeof worksClose.focus === "function") worksClose.focus();
+    }, 50);
   };
 
   const closeWorksOverlay = ({ clearUrl = true } = {}) => {
@@ -430,6 +441,10 @@
 
     STATE.isOpen = false;
     worksOverlay.classList.remove("works-is-open");
+    worksVideo.pause();
+    worksVideo.removeAttribute("src");
+    worksVideo.innerHTML = "";
+    worksEmbed.src = "";
 
     window.setTimeout(() => {
       worksOverlay.hidden = true;
@@ -466,17 +481,6 @@
     if (!project || project.images.length <= 1) return;
     STATE.imageIndex = (STATE.imageIndex - 1 + project.images.length) % project.images.length;
     updateImage();
-  };
-
-  const onDocumentClick = (event) => {
-    const trigger = event.target.closest("[data-project-id]");
-    if (!trigger) return;
-
-    const projectId = trigger.getAttribute("data-project-id");
-    if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
-
-    event.preventDefault();
-    openWorksOverlay(projectId);
   };
 
   const onOverlayKeydown = (event) => {
@@ -655,26 +659,17 @@
     document.addEventListener("keydown", onOverlayKeydown);
   };
 
-  const bindProjectTriggers = () => {
-    const triggers = Array.from(document.querySelectorAll("[data-project-id]"));
-    triggers.forEach((trigger) => {
-      if (trigger.dataset.worksBound === "true") return;
-      trigger.dataset.worksBound = "true";
-      trigger.addEventListener("click", (event) => {
-        const projectId = trigger.getAttribute("data-project-id");
-        if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
-        event.preventDefault();
-        openWorksOverlay(projectId);
-      });
-    });
-  };
-
   const init = () => {
     injectWorksOverlay();
     preloadFirstImages();
-    bindProjectTriggers();
-
-    document.addEventListener("click", onDocumentClick, true);
+    document.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-project-id]");
+      if (!trigger || worksOverlay.contains(trigger)) return;
+      const projectId = trigger.getAttribute("data-project-id");
+      if (!PROJECT_INDEX_BY_ID.has(projectId)) return;
+      event.preventDefault();
+      openWorksOverlay(projectId);
+    });
 
     window.addEventListener("hashchange", () => {
       const idFromHash = getProjectIdFromHash();

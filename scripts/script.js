@@ -7,15 +7,33 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const validThemeChoices = new Set(["system", "light", "dark"]);
 let currentThemeChoice = "system";
 
+const storage = {
+  get(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch (error) {
+      return null;
+    }
+  },
+  set(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (error) {
+      /* ignore storage errors */
+    }
+  }
+};
+
 const applyThemeAssets = (theme) => {
   document.querySelectorAll("[data-src-light]").forEach((el) => {
     const lightSrc = el.getAttribute("data-src-light");
     const darkSrc = el.getAttribute("data-src-dark");
     const nextSrc = theme === "light" ? lightSrc : darkSrc;
+    if (!nextSrc) return;
 
     if (el.tagName === "SOURCE") {
-      if (el.src !== nextSrc) {
-        el.src = nextSrc;
+      if (el.getAttribute("src") !== nextSrc) {
+        el.setAttribute("src", nextSrc);
         if (el.parentElement && el.parentElement.tagName === "VIDEO") {
           el.parentElement.load();
         }
@@ -23,12 +41,14 @@ const applyThemeAssets = (theme) => {
       return;
     }
 
-    el.src = nextSrc;
+    if (el.getAttribute("src") !== nextSrc) {
+      el.setAttribute("src", nextSrc);
+    }
   });
 };
 
 const getStoredThemeChoice = () => {
-  const stored = localStorage.getItem("theme");
+  const stored = storage.get("theme");
   if (stored && validThemeChoices.has(stored)) return stored;
   return null;
 };
@@ -54,7 +74,7 @@ const applyThemeChoice = (themeChoice, shouldPersist = false) => {
   themeRoot.dataset.theme = appliedTheme;
   applyThemeAssets(appliedTheme);
   syncThemeUi(currentThemeChoice);
-  if (shouldPersist) localStorage.setItem("theme", currentThemeChoice);
+  if (shouldPersist) storage.set("theme", currentThemeChoice);
 };
 
 const closeThemeMenu = () => {
@@ -99,9 +119,15 @@ if (themeDropdown && themeTrigger && themeMenu && themeOptions.length) {
   });
 }
 
-systemThemeQuery.addEventListener("change", () => {
+const onSystemThemeChange = () => {
   if (currentThemeChoice === "system") applyThemeChoice("system", false);
-});
+};
+
+if (typeof systemThemeQuery.addEventListener === "function") {
+  systemThemeQuery.addEventListener("change", onSystemThemeChange);
+} else if (typeof systemThemeQuery.addListener === "function") {
+  systemThemeQuery.addListener(onSystemThemeChange);
+}
 
 const aboutToggle = document.getElementById("aboutToggle");
 const bio = document.getElementById("bio");
