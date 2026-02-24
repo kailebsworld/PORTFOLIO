@@ -130,7 +130,6 @@
   let worksImageFallback;
   let worksIndex;
   let worksTopIndexNodes;
-  let worksProgressBar;
   let worksClose;
   let worksProjectPrev;
   let worksProjectNext;
@@ -397,7 +396,6 @@
     worksTopIndexNodes.forEach((node) => {
       node.textContent = formattedIndex;
     });
-    worksProgressBar.style.width = `${(current / PROJECTS.length) * 100}%`;
 
     if (STATE.imageIndex >= project.images.length) STATE.imageIndex = 0;
     updateImage({ animate });
@@ -523,15 +521,10 @@
 
           <div class="works-heading-row">
             <h2 class="works-dialog-title" id="works-dialog-title"></h2>
-            <div class="works-heading-marquee" aria-hidden="true">
-              <div class="works-heading-track">
-                <span class="works-overlay-title"></span>
-                <span class="works-heading-project">PROJECT</span>
-                <span class="works-top-index"></span>
-                <span class="works-overlay-title"></span>
-                <span class="works-heading-project">PROJECT</span>
-                <span class="works-top-index"></span>
-              </div>
+            <div class="works-heading-static" aria-hidden="true">
+              <span class="works-top-index"></span>
+              <span class="works-overlay-title"></span>
+              <span class="works-heading-project">PROJECT</span>
             </div>
           </div>
 
@@ -544,7 +537,7 @@
                 <div class="works-more-label">MORE PROJECTS</div>
                 <a class="works-link" href="#contact">Contact <span aria-hidden="true">↗</span></a>
               </div>
-              <div class="works-strip" aria-label="Project list"></div>
+              <div class="works-strip works-strip-bottom" aria-label="Project list"></div>
             </article>
 
             <article class="works-media-shell">
@@ -571,7 +564,6 @@
             <button class="works-project-nav works-project-prev" type="button">Prev Project</button>
             <div class="works-index" aria-live="polite"></div>
             <button class="works-project-nav works-project-next" type="button">Next Project</button>
-            <div class="works-progress" aria-hidden="true"><span class="works-progress-bar"></span></div>
           </div>
         </section>
       </div>`
@@ -591,7 +583,6 @@
     worksImageFallback = document.querySelector(".works-image-fallback");
     worksIndex = document.querySelector(".works-index");
     worksTopIndexNodes = Array.from(document.querySelectorAll(".works-top-index"));
-    worksProgressBar = document.querySelector(".works-progress-bar");
     worksClose = document.querySelector(".works-close");
     worksProjectPrev = document.querySelector(".works-project-prev");
     worksProjectNext = document.querySelector(".works-project-next");
