@@ -32,8 +32,22 @@
       meta: "Graphic Design • 2026",
       description: "Poster concept focused on hierarchy, pacing, and high-contrast composition.",
       tags: ["Graphics", "Print", "Poster"],
-      images: ["assets/images/Calendar 1.png"],
-      mediaThumb: "assets/images/Calendar 1.png",
+      images: [
+        "assets/images/Calendar Main Cover.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged).png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 2.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 3.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 4.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 5.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 6.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 7.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 8.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 9.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 10.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 11.png",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 12.png"
+      ],
+      mediaThumb: "assets/images/Calendar Main Cover.png",
       link: ""
     },
     {
@@ -42,8 +56,17 @@
       meta: "Graphic Design • 2026",
       description: "Editorial cover study built around expressive typography and fashion-forward art direction.",
       tags: ["Graphics", "Editorial", "Print"],
-      images: ["assets/images/Poser Mag.png"],
-      mediaThumb: "assets/images/Poser Mag.png",
+      images: [
+        "assets/images/POSER MAG 1.png",
+        "assets/images/POSER MAG 2.png",
+        "assets/images/POSER MAG 3.png",
+        "assets/images/POSER MAG 4.png",
+        "assets/images/POSER MAG 5.png",
+        "assets/images/POSER MAG 6.png",
+        "assets/images/Poser Mag 7.png",
+        "assets/images/Pop-magazine.pdf"
+      ],
+      mediaThumb: "assets/images/POSER MAG 1.png",
       link: ""
     },
     {
@@ -116,6 +139,8 @@
 
   const PROJECT_INDEX_BY_ID = new Map(PROJECTS.map((project, index) => [project.id, index]));
   const LOADED_IMAGES = new Set();
+  let pdfJsReadyPromise = null;
+  let pdfRenderToken = 0;
 
   let worksOverlay;
   let worksPanel;
@@ -127,6 +152,8 @@
   let worksImage;
   let worksVideo;
   let worksEmbed;
+  let worksPdfView;
+  let worksPdfPages;
   let worksImageFallback;
   let worksIndex;
   let worksTopIndexNodes;
@@ -141,6 +168,7 @@
   const pad = (value) => String(value).padStart(3, "0");
   const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
   const isVideoSrc = (src) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(src || "");
+  const isPdfSrc = (src) => /\.pdf(\?|#|$)/i.test(src || "");
   const normalizeMediaSrc = (src) => {
     try {
       return encodeURI(src || "").replace(/#/g, "%23");
@@ -150,6 +178,84 @@
   };
   const toFigmaEmbedUrl = (url) =>
     `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url || "")}`;
+
+  const ensurePdfJs = () => {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    if (pdfJsReadyPromise) return pdfJsReadyPromise;
+
+    pdfJsReadyPromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector("script[data-pdfjs='true']");
+      if (existing) {
+        existing.addEventListener("load", () => resolve(window.pdfjsLib));
+        existing.addEventListener("error", reject);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      script.async = true;
+      script.dataset.pdfjs = "true";
+      script.onload = () => resolve(window.pdfjsLib);
+      script.onerror = reject;
+      document.head.appendChild(script);
+    }).then((pdfjsLib) => {
+      if (pdfjsLib && pdfjsLib.GlobalWorkerOptions) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      }
+      return pdfjsLib;
+    });
+
+    return pdfJsReadyPromise;
+  };
+
+  const renderPdfInOverlay = async (src) => {
+    if (!worksPdfView || !worksPdfPages) return;
+
+    const token = ++pdfRenderToken;
+    worksPdfPages.innerHTML = '<div class="works-pdf-loading">Loading PDF...</div>';
+
+    try {
+      const pdfjsLib = await ensurePdfJs();
+      if (!pdfjsLib || token !== pdfRenderToken) return;
+
+      const pdf = await pdfjsLib.getDocument({ url: src }).promise;
+      if (token !== pdfRenderToken) return;
+
+      const frameWidth = Math.max(320, worksPdfView.clientWidth - 24);
+      const fragment = document.createDocumentFragment();
+
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+        if (token !== pdfRenderToken) return;
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 1 });
+        const scale = Math.min(2.2, frameWidth / viewport.width);
+        const scaledViewport = page.getViewport({ scale });
+        const dpr = window.devicePixelRatio || 1;
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "works-pdf-page";
+        canvas.width = Math.floor(scaledViewport.width * dpr);
+        canvas.height = Math.floor(scaledViewport.height * dpr);
+        canvas.style.width = `${Math.floor(scaledViewport.width)}px`;
+        canvas.style.height = `${Math.floor(scaledViewport.height)}px`;
+
+        const ctx = canvas.getContext("2d", { alpha: false });
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+        fragment.appendChild(canvas);
+      }
+
+      if (token !== pdfRenderToken) return;
+      worksPdfPages.innerHTML = "";
+      worksPdfPages.appendChild(fragment);
+      worksImageFallback.classList.remove("works-is-visible");
+    } catch (error) {
+      if (token !== pdfRenderToken) return;
+      worksPdfPages.innerHTML = "";
+      worksImageFallback.classList.add("works-is-visible");
+    }
+  };
 
   const getProjectIdFromHash = () => {
     if (!window.location.hash.startsWith("#work=")) return null;
@@ -167,7 +273,7 @@
 
   const preloadFirstImages = () => {
     PROJECTS.forEach((project) => {
-      const firstImage = project.images.find((src) => !isVideoSrc(src));
+      const firstImage = project.images.find((src) => !isVideoSrc(src) && !isPdfSrc(src));
       preloadImage(firstImage);
     });
   };
@@ -302,9 +408,10 @@
     const mediaSrc = project.images[STATE.imageIndex] || project.images[0] || "";
     const safeMediaSrc = normalizeMediaSrc(mediaSrc);
     const mediaIsVideo = project.id === "graphic-3" || isVideoSrc(mediaSrc);
+    const mediaIsPdf = isPdfSrc(mediaSrc);
 
     if (animate) worksImage.classList.add("works-is-swapping");
-    if (!mediaIsVideo && mediaSrc) preloadImage(mediaSrc);
+    if (!mediaIsVideo && !mediaIsPdf && mediaSrc) preloadImage(mediaSrc);
 
     worksImageFallback.classList.remove("works-is-visible");
     if (hasEmbed) {
@@ -322,6 +429,8 @@
       worksEmbed.hidden = false;
       worksEmbed.style.display = "block";
       worksEmbed.src = toFigmaEmbedUrl(project.previewEmbed);
+      worksPdfView.hidden = true;
+      worksPdfView.style.display = "none";
       worksImageFallback.classList.remove("works-is-visible");
     } else if (mediaIsVideo) {
       STATE.previewMode = "video";
@@ -338,6 +447,26 @@
       worksVideo.innerHTML = `<source src="${safeMediaSrc}" type="video/mp4">`;
       worksVideo.load();
       worksVideo.play().catch(() => {});
+      worksPdfView.hidden = true;
+      worksPdfView.style.display = "none";
+    } else if (mediaIsPdf) {
+      STATE.previewMode = "pdf";
+      worksImage.hidden = true;
+      worksImage.style.display = "none";
+      worksImage.removeAttribute("src");
+      worksImage.alt = "";
+      worksVideo.pause();
+      worksVideo.removeAttribute("src");
+      worksVideo.poster = "";
+      worksVideo.load();
+      worksVideo.hidden = true;
+      worksVideo.style.display = "none";
+      worksEmbed.hidden = true;
+      worksEmbed.style.display = "none";
+      worksEmbed.src = "";
+      worksPdfView.hidden = false;
+      worksPdfView.style.display = "block";
+      renderPdfInOverlay(safeMediaSrc);
     } else {
       STATE.previewMode = "image";
       worksVideo.pause();
@@ -349,6 +478,8 @@
       worksEmbed.hidden = true;
       worksEmbed.style.display = "none";
       worksEmbed.src = "";
+      worksPdfView.hidden = true;
+      worksPdfView.style.display = "none";
       worksImage.hidden = false;
       worksImage.style.display = "block";
       worksImage.alt = `${project.title} preview ${STATE.imageIndex + 1}`;
@@ -553,6 +684,9 @@
                     allowfullscreen
                     hidden
                   ></iframe>
+                  <div class="works-pdf-view" hidden>
+                    <div class="works-pdf-pages"></div>
+                  </div>
                   <div class="works-image-fallback" role="status" aria-live="polite">Preview image unavailable.</div>
                 </div>
                 <button class="works-media-nav works-media-next" type="button" aria-label="Next image">→</button>
@@ -580,6 +714,8 @@
     worksImage = document.querySelector(".works-image");
     worksVideo = document.querySelector(".works-video");
     worksEmbed = document.querySelector(".works-embed");
+    worksPdfView = document.querySelector(".works-pdf-view");
+    worksPdfPages = document.querySelector(".works-pdf-pages");
     worksImageFallback = document.querySelector(".works-image-fallback");
     worksIndex = document.querySelector(".works-index");
     worksTopIndexNodes = Array.from(document.querySelectorAll(".works-top-index"));

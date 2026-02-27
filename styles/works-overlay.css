@@ -586,3 +586,65 @@ body.works-lock {
   display: block;
   background: #000;
 }
+
+.works-pdf-view {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 0.75rem;
+  background: #efefef;
+}
+
+.works-pdf-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 100%;
+}
+
+.works-pdf-page {
+  display: block;
+  background: #fff;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
+}
+
+.works-pdf-loading {
+  color: #666;
+  font-size: 0.95rem;
+  padding: 1rem;
+}
+
+[data-theme="dark"] .works-pdf-view {
+  background: #111;
+}
+
+[data-theme="dark"] .works-pdf-page {
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .works-pdf-loading {
+  color: #bbb;
+}
+
+.works-pdf-view {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.7) transparent;
+}
+
+.works-pdf-view::-webkit-scrollbar {
+  width: 0.625rem;
+}
+
+.works-pdf-view::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.works-pdf-view::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.65);
+  border-radius: 999px;
+}
+
+[data-theme="dark"] .works-pdf-view::-webkit-scrollbar-thumb {
+  background: rgba(190, 190, 190, 0.45);
+}
