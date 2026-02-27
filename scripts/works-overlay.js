@@ -8,7 +8,7 @@
       title: "Talk Fast Social",
       meta: "Graphic Design • 2026",
       description:
-        "Social-first campaign graphics and structured ad systems designed for speed, clarity, and brand consistency across client channels.",
+        "At Talk Fast Social, I design social-first campaign visuals and repeatable ad systems that keep brands consistent while moving fast—supporting clients like AMR and Inland Imaging across multiple channels.",
       tags: ["Web Design", "Marketing", "Motion"],
       images: ["assets/images/TFS 1.jpg", "assets/images/TFS 2.jpg"],
       link: ""
@@ -18,7 +18,7 @@
       title: "EWU Student Affairs",
       meta: "Campus Communication • 2026",
       description:
-        "Print and digital communication assets developed for student programs, events, and institutional announcements under the Dean of Students office.",
+        "As the in-house designer for EWU’s Dean of Students office, I create clear, accessible print and digital communications for student-facing programs and institutional announcements—built to be read fast and used everywhere.",
       tags: ["Print", "Campaign", "Brand"],
       images: [
         "assets/images/Student Affairs-251102-Dean on Call rack card- v1 (dragged)-1.png",
@@ -30,7 +30,7 @@
       id: "graphic-1",
       title: "Calendar Poster",
       meta: "Graphic Design • 2026",
-      description: "Poster concept focused on hierarchy, pacing, and high-contrast composition.",
+      description: "Production Design final: a full-year illustrated calendar system built around bold color blocking, playful character art, and a consistent monthly grid for clarity and repeatable layout structure.",
       tags: ["Graphics", "Print", "Poster"],
       images: [
         "assets/images/CALENDAR 1.webp",
@@ -55,7 +55,7 @@
       id: "graphic-2",
       title: "Poser Magazine",
       meta: "Graphic Design • 2026",
-      description: "Editorial cover study built around expressive typography and fashion-forward art direction.",
+      description: "VCD 2 final: a multi-spread pop culture magazine concept (POSER) built around bold typographic hierarchy, image-driven pacing, and editorial layouts spotlighting today’s pop artists.",
       tags: ["Graphics", "Editorial", "Print"],
       images: [
         "assets/images/POSER MAG 1.png",
@@ -74,7 +74,7 @@
       id: "graphic-3",
       title: "As We Were In Dreams",
       meta: "Graphic Motion • 2026",
-      description: "A standalone motion piece from the graphics set, treated as its own project.",
+      description: "Motion Design final: an After Effects moving poster that brings a static layout to life through kinetic type, timed reveals, and loopable motion built for screen.",
       tags: ["Graphics", "Motion", "Video"],
       images: ["assets/images/as-we-were-in-dreams.mp4"],
       mediaThumb: "assets/images/as-we-were-in-dreams.mp4",
@@ -86,10 +86,11 @@
       title: "Branding",
       meta: "Identity Systems • 2026",
       description:
-        "Logo and brand identity explorations that align typography, color, and messaging into a cohesive, scalable system.",
+        "Professional Practice final: partnered with a local Spokane business (Pacific Auto Sales) to refresh their visual identity and produce real marketing assets—logo, business card, and vehicle promo graphics built for fast, consistent use.",
       tags: ["Identity", "Logo", "System"],
       images: [
         "assets/images/PAS LOGO CAR.png",
+        "assets/images/PAS POSTER MOCKUP.png",
         "assets/images/PAS LOGO.png",
         "assets/images/PAS 2.png",
         "assets/images/PAS 1.png"
@@ -100,9 +101,13 @@
       id: "graphic-4",
       title: "Puma Poster",
       meta: "Graphic Design • 2026",
-      description: "Automotive poster composition focused on contrast, hierarchy, and bold directional layout.",
+      description: "Branding exploration for PUMA Speedcats—translated speed + motion into a grid-based poster system using custom icons, directional cues, and high-contrast red/blue composition.",
       tags: ["Graphics", "Poster", "Print"],
-      images: ["assets/images/PUMA POSTER BOARD.png", "assets/images/Puma Poster.pdf"],
+      images: [
+        "assets/images/PUMA POSTER BOARD.png",
+        "assets/images/PUMA POSTER BOARD 2.png",
+        "assets/images/Puma Poster.pdf"
+      ],
       mediaThumb: "assets/images/PUMA POSTER BOARD.png",
       link: ""
     },
@@ -110,7 +115,7 @@
       id: "graphic-5",
       title: "Bumper Logo",
       meta: "Graphic Motion • 2026",
-      description: "Animated bumper logo rough draft focused on movement, timing, and brand presence.",
+      description: "Motion Design project: created an original production company logo in Illustrator and animated it in After Effects as a 10–15s bumper—exploring motion, sound, and virtual space for a film-ready brand intro/outro.",
       tags: ["Graphics", "Motion", "Logo"],
       images: ["assets/images/Bumper Logo Rough Draft.mp4"],
       mediaThumb: "assets/images/Bumper Logo Rough Draft.mp4",
@@ -120,7 +125,7 @@
       id: "uiux-1",
       title: "Maison Margiela",
       meta: "UI/UX • 2026",
-      description: "High-fashion inspired interface exploration with cinematic composition and strong contrast.",
+      description: "Maison Margiela mobile app UX final: style tile + hi-fi prototype with fully linked screens and four feature flows built from a cohesive component system.",
       tags: ["UI", "UX", "Visual"],
       images: ["assets/images/MAISON-MARGIELA.png"],
       mediaThumb: "assets/images/MAISON-MARGIELA.png",
@@ -132,7 +137,7 @@
       id: "uiux-2",
       title: "KlickyKitty",
       meta: "UI/UX • 2026",
-      description: "Playful product interface system with clear hierarchy and prototype-ready components.",
+      description: "UX 1 Virtual Pet (Apple Watch): a fully linked prototype for adopting, naming, and customizing a pet—built with a style tile, reusable components/variants, and clear watch-sized UI patterns.",
       tags: ["UI", "UX", "Prototype"],
       images: ["assets/images/KlickyKitty.png"],
       mediaThumb: "assets/images/KlickyKitty.png",
@@ -142,14 +147,14 @@
     },
     {
       id: "uiux-3",
-      title: "Drop A File",
+      title: "Design Library App",
       meta: "UI/UX • 2026",
-      description: "Workflow-focused upload interface concept optimized for clarity and quick actions.",
+      description: "UX project: designed a mobile Design Library app for learning + reference—browse curated lessons, save/bookmark resources, and jump into topics like Gestalt principles and UI components.",
       tags: ["UI", "UX", "Interaction"],
-      images: ["assets/images/drop-a-file.png"],
-      mediaThumb: "assets/images/drop-a-file.png",
+      images: ["assets/images/ARCHIVE DESIGN APP.png"],
+      mediaThumb: "assets/images/ARCHIVE DESIGN APP.png",
       previewEmbed:
-        "https://www.figma.com/proto/sq1AFyKuaMPlUM31Fw8qoO/Daily-UI-Challenge?node-id=61-106&t=cfTtb8RmywbUL2fO-0&scaling=scale-down&content-scaling=fixed&page-id=59%3A3&starting-point-node-id=61%3A106",
+        "https://www.figma.com/proto/57wTGKKWY37c2fWvmASB5k/UX-2-Project--2--Design-Library-App--JUST-KAILEB?node-id=2498-5725&t=wWlwuAYbdeJ55M00-0&scaling=scale-down&content-scaling=fixed&page-id=1%3A21&starting-point-node-id=2498%3A5725",
       link: ""
     }
   ];
@@ -178,6 +183,7 @@
   let worksImage;
   let worksVideo;
   let worksEmbed;
+  let worksMediaFrame;
   let worksPdfView;
   let worksPdfPages;
   let worksImageFallback;
@@ -202,8 +208,13 @@
       return "";
     }
   };
-  const toFigmaEmbedUrl = (url) =>
-    `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url || "")}`;
+  const toFigmaEmbedUrl = (url) => {
+    const source = url || "";
+    if (!source) return "https://www.figma.com/embed?embed_host=share&url=";
+    const separator = source.includes("?") ? "&" : "?";
+    const withUiHidden = `${source}${separator}hide-ui=1`;
+    return `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(withUiHidden)}`;
+  };
 
   const ensurePdfJs = () => {
     if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
@@ -438,6 +449,7 @@
 
     if (animate) worksImage.classList.add("works-is-swapping");
     if (!mediaIsVideo && !mediaIsPdf && mediaSrc) preloadImage(mediaSrc);
+    worksMediaFrame.classList.toggle("works-is-embed", hasEmbed);
 
     worksImageFallback.classList.remove("works-is-visible");
     if (hasEmbed) {
@@ -512,8 +524,11 @@
       worksImage.src = safeMediaSrc;
     }
 
-    worksMediaPrev.disabled = hasEmbed || totalImages <= 1;
-    worksMediaNext.disabled = hasEmbed || totalImages <= 1;
+    const canNavigateMedia = !hasEmbed && totalImages > 1;
+    worksMediaPrev.disabled = !canNavigateMedia;
+    worksMediaNext.disabled = !canNavigateMedia;
+    worksMediaPrev.hidden = !canNavigateMedia;
+    worksMediaNext.hidden = !canNavigateMedia;
 
     window.setTimeout(() => {
       worksImage.classList.remove("works-is-swapping");
@@ -740,6 +755,7 @@
     worksImage = document.querySelector(".works-image");
     worksVideo = document.querySelector(".works-video");
     worksEmbed = document.querySelector(".works-embed");
+    worksMediaFrame = document.querySelector(".works-media-frame");
     worksPdfView = document.querySelector(".works-pdf-view");
     worksPdfPages = document.querySelector(".works-pdf-pages");
     worksImageFallback = document.querySelector(".works-image-fallback");
