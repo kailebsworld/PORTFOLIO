@@ -1015,7 +1015,7 @@ main{
 }
 
 .pixels-left .a{ width:17.5rem; height:17.5rem; left:-2.5rem; top:0; }
-.pixels-left .b{ width:16.25rem; height:16.25rem; left:8.75rem; top:11.25rem; }
+.pixels-left .b{ width:16.25rem; height:16.25rem; left:7.75rem; top:11.25rem; }
 .pixels-left .c{ width:17.5rem; height:17.5rem; left:-2.5rem; top:20.625rem; }
 
 .pixels-mid .a{ width:16.25rem; height:16.25rem; left:0; top:0; }
@@ -1550,7 +1550,7 @@ main{
   #services .pixels-left{ height: 21.875rem; }
   #services .service:first-child .pixels-left{ margin-bottom: 2.5rem; }
   #services .pixels-left .a{ width:7.5rem; height:11.25rem; left:0; top:0; }
-  #services .pixels-left .b{ width:11.875rem; height:7.5rem; left:7.5rem; top:2.5rem; }
+  #services .pixels-left .b{ width:11.875rem; height:7.5rem; left:6.75rem; top:2.5rem; }
   #services .pixels-left .c{ width:8.75rem; height:12.5rem; left:0.625rem; top:9.375rem; }
 
   #services .pixels-mid{ height: 20rem; }

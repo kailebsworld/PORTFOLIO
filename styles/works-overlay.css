@@ -313,7 +313,7 @@
   align-items: stretch;
   gap: 0.55rem;
   width: max-content;
-  animation: worksProjectsMarquee 22s linear infinite;
+  animation: worksProjectsMarquee 30s linear infinite;
   min-height: 100%;
 }
 
@@ -354,13 +354,15 @@
 .works-strip-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 .works-strip-media video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
 }
 

@@ -33,21 +33,22 @@
       description: "Poster concept focused on hierarchy, pacing, and high-contrast composition.",
       tags: ["Graphics", "Print", "Poster"],
       images: [
-        "assets/images/Calendar Main Cover.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged).png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 2.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 3.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 4.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 5.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 6.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 7.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 8.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 9.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 10.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 11.png",
-        "assets/images/Kaileb_Cardle_Calendar copy-3-1 (dragged) 12.png"
+        "assets/images/CALENDAR 1.webp",
+        "assets/images/CALENDAR 2.avif",
+        "assets/images/CALENDAR 3.jpg",
+        "assets/images/CALENDAR 4.jpg",
+        "assets/images/CALENDAR 5.avif",
+        "assets/images/CALENDAR 6.jpg",
+        "assets/images/CALENDAR 7.avif",
+        "assets/images/CALENDAR 8.avif",
+        "assets/images/CALENDAR 9.jpg",
+        "assets/images/CALENDAR 10.jpg",
+        "assets/images/CALENDAR 11.avif",
+        "assets/images/CALENDAR 12.jpg",
+        "assets/images/CALENDAR 13.avif",
+        "assets/images/Kaileb_Cardle_Calendar copy-3-1.pdf"
       ],
-      mediaThumb: "assets/images/Calendar Main Cover.png",
+      mediaThumb: "assets/images/CALENDAR 1.webp",
       link: ""
     },
     {
@@ -87,7 +88,32 @@
       description:
         "Logo and brand identity explorations that align typography, color, and messaging into a cohesive, scalable system.",
       tags: ["Identity", "Logo", "System"],
-      images: ["assets/images/PAS LOGO.png", "assets/images/PAS 2.png", "assets/images/PAS 1.png"],
+      images: [
+        "assets/images/PAS LOGO CAR.png",
+        "assets/images/PAS LOGO.png",
+        "assets/images/PAS 2.png",
+        "assets/images/PAS 1.png"
+      ],
+      link: ""
+    },
+    {
+      id: "graphic-4",
+      title: "Puma Poster",
+      meta: "Graphic Design • 2026",
+      description: "Automotive poster composition focused on contrast, hierarchy, and bold directional layout.",
+      tags: ["Graphics", "Poster", "Print"],
+      images: ["assets/images/PUMA POSTER BOARD.png", "assets/images/Puma Poster.pdf"],
+      mediaThumb: "assets/images/PUMA POSTER BOARD.png",
+      link: ""
+    },
+    {
+      id: "graphic-5",
+      title: "Bumper Logo",
+      meta: "Graphic Motion • 2026",
+      description: "Animated bumper logo rough draft focused on movement, timing, and brand presence.",
+      tags: ["Graphics", "Motion", "Logo"],
+      images: ["assets/images/Bumper Logo Rough Draft.mp4"],
+      mediaThumb: "assets/images/Bumper Logo Rough Draft.mp4",
       link: ""
     },
     {
