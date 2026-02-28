@@ -143,7 +143,8 @@ if (aboutToggle && bio && bioText) {
     if (bio.classList.contains("is-open")) {
       bioText.style.maxHeight = `${bioText.scrollHeight}px`;
     } else {
-      bioText.style.maxHeight = "280px";
+      const collapsedHeight = window.innerWidth <= 480 ? 352 : 280;
+      bioText.style.maxHeight = `${collapsedHeight}px`;
     }
   };
 

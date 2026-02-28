@@ -460,7 +460,7 @@ main{
   left: 29%;
   top: 50%;
   width: 73%;
-  z-index: 2;
+  z-index: 0;
 }
 
 .name-video{
@@ -1342,47 +1342,60 @@ main{
   .heroWrap{
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+    overflow: hidden;
   }
 
   .heroStage{
     aspect-ratio: 16 / 9;
+    overflow: hidden;
   }
 
   .hello-box{
-    left: 1%;
-    top: 17%;
-    width: 46%;
+    left: 2.25%;
+    top: 16.5%;
+    width: 44.5%;
   }
 
   .hello-text{
-    font-size: clamp(1.5rem, 6.5vw, 2.8rem);
+    font-size: clamp(1.1rem, 4.9vw, 1.9rem);
   }
 
   .years{
-    width: 31%;
-    top: 21%;
+    width: 16%;
+    top: 22.6%;
   }
 
   .years p{
-    font-size: clamp(4rem, 16vw, 6.4rem);
+    font-size: clamp(1.6rem, 7.4vw, 2.65rem);
+    line-height: 1.02;
   }
 
   .bg-words{
-    right: 2%;
-    top: 13%;
-    font-size: clamp(3.2rem, 13.8vw, 5.4rem);
+    right: 4%;
+    top: 11.8%;
+    font-size: clamp(1.45rem, 6.8vw, 2.5rem);
+    line-height: 1.06;
   }
 
   .cursor-img{
-    left: 55%;
-    top: 49%;
-    width: 6%;
+    left: 56.5%;
+    top: 41.5%;
+    width: 4.6%;
   }
 
   .name-media{
-    left: 25%;
+    left: 29%;
     top: 56%;
-    width: 73%;
+    width: 69%;
+  }
+
+  /* 428x926 dark mode: keep (2026) readable behind hero layers */
+  [data-theme="dark"] .years{
+    width: 21%;
+  }
+
+  [data-theme="dark"] .hello-box{
+    background-color: transparent;
   }
 
   .about-inner{
@@ -1632,4 +1645,289 @@ main{
     margin-top: 1.5rem;
     padding-bottom: 1.5rem;
   }
+}
+
+/* === FORCE 500x539 LOOK AT 428x926 === */
+/* Use a tight height range because mobile browser chrome changes CSS viewport height. */
+@media (min-width: 426px) and (max-width: 430px) and (min-height: 850px) and (max-height: 980px){
+  :root{
+    --pad: 0.75rem;
+  }
+
+  main{
+    padding-top: var(--header-h);
+  }
+
+  .heroWrap{
+    justify-content:flex-start;
+    padding: 0.5rem var(--pad) 2.5rem;
+    overflow: visible;
+  }
+
+  .heroStage{
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    overflow: visible;
+  }
+
+  .hello-box{
+    left: 1%;
+    top: 17%;
+    width: 45%;
+  }
+
+  .hello-text{
+    font-size: clamp(1.4rem, 5.8vw, 6.25rem);
+    line-height: 0.98;
+  }
+
+  .years{
+    left: 1.5%;
+    top: 24.5%;
+    width: 29%;
+    z-index: 8;
+    overflow: visible;
+  }
+
+  .years p{
+    font-size: clamp(1.8rem, 7.5vw, 6.125rem);
+    line-height: 1.06;
+  }
+
+  [data-theme="dark"] .years{
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+
+  .bg-words{
+    right: 1%;
+    top: 11%;
+    font-size: clamp(1.85rem, 6.1vw, 6.8rem);
+    line-height: 1.06;
+  }
+
+  .cursor-img{
+    left: 57.5%;
+    top: 52%;
+    width: 4.2%;
+  }
+
+  .name-media{
+    left: 29%;
+    top: 50%;
+    width: 73%;
+    z-index: 0;
+  }
+
+  .about-spotlight-text{
+    font-size: clamp(1.375rem, 2.15vw, 2.125rem);
+    line-height: 1.22;
+  }
+
+  .bio.is-collapsed .bio-text{
+    max-height: 17.5rem !important;
+  }
+
+  .bio.is-collapsed .bio-text::before,
+  .bio.is-collapsed .bio-text::after{
+    height: 4.375rem;
+  }
+
+  .bio-dim{
+    opacity: 1;
+    filter: blur(0.025rem);
+  }
+
+  /* Keep stacked mobile flow, but with the 500px scale hierarchy */
+  #works .works-layout{
+    display:none;
+  }
+
+  #works .works-bg{
+    display:flex;
+    left: 50%;
+    top: 7.5rem;
+    transform: translateX(-50%);
+    gap: 1.1rem;
+    opacity: 0.78;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  #works .works-bg span{
+    font-size: clamp(4.5rem, 16vw, 8.5rem);
+    letter-spacing: -0.06em;
+  }
+
+  #works .works-bg span:nth-child(2){
+    transform: translateX(1.4rem);
+  }
+
+  #works .works-mobile{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 2.25rem;
+    padding: 0 var(--pad);
+    max-width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  #works .works-mobile-block{
+    width: min(100%, 11.5rem);
+    gap: 1rem;
+  }
+
+  /* EWU block: slightly smaller than TFS at this viewport */
+  #works .works-mobile-block:last-child{
+    position: relative;
+    width: min(100%, 10.5rem);
+    z-index: 1;
+  }
+
+  #works .works-mobile-block:last-child::before,
+  #works .works-mobile-block:last-child::after{
+    content: "WORKS WORKS";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 900;
+    font-size: clamp(4.5rem, 16vw, 8.5rem);
+    letter-spacing: -0.06em;
+    word-spacing: 0.25em;
+    white-space: nowrap;
+    line-height: 0.9;
+    background: var(--gradient-works-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: var(--shadow-works-text);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  #works .works-mobile-block:last-child::before{
+    top: 3.5rem;
+    opacity: 0.72;
+  }
+
+  #works .works-mobile-block:last-child::after{
+    top: 8.9rem;
+    left: calc(50% + 1.4rem);
+    opacity: 0.62;
+  }
+
+  #works .work-secondary-bg-only{
+    display:none;
+  }
+
+  #works .work-bg-inline{
+    display:none;
+  }
+
+  #works .work-secondary{
+    position: relative;
+    width: 100%;
+    display:block;
+    margin-top: 0;
+    padding: 0;
+  }
+
+  #works .work-secondary .work-tile{
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Graphic Design collage: match larger 428x926 reference sizing */
+  #services .service:first-child .pixels-left{
+    height: 33rem;
+    margin-bottom: 3rem;
+  }
+
+  #services .service:first-child .pixels-left .a{
+    width: 12.8rem;
+    height: 18.2rem;
+    left: 1.9rem;
+    top: 0.4rem;
+    z-index: 1;
+  }
+
+  #services .service:first-child .pixels-left .b{
+    width: 20.8rem;
+    height: 14.4rem;
+    left: 8.2rem;
+    top: 6.6rem;
+    z-index: 3;
+  }
+
+  #services .service:first-child .pixels-left .c{
+    width: 12.5rem;
+    height: 17.25rem;
+    left: 3.25rem;
+    top: 18.7rem;
+    z-index: 1;
+  }
+
+  /* Branding collage: match reference composition */
+  #services .service:nth-child(2) .pixels-mid{
+    height: 39rem;
+    margin-bottom: 3rem;
+  }
+
+  #services .service:nth-child(2) .pixels-mid .a{
+    width: 16rem;
+    height: 10rem;
+    left: -0.05rem;
+    top: 0.75rem;
+    z-index: 2;
+  }
+
+  #services .service:nth-child(2) .pixels-mid .b{
+    width: 13rem;
+    height: 20rem;
+    left: 12.25rem;
+    top: 6.35rem;
+    z-index: 3;
+  }
+
+  #services .service:nth-child(2) .pixels-mid .c{
+    width: 15rem;
+    height: 11rem;
+    left: 1rem;
+    top: 19.75rem;
+    z-index: 1;
+  }
+
+  /* UI/UX: match reference with equal iPhones and watch overlay */
+  #services .service:nth-child(3) .pixels-right{
+    height: 47rem;
+    margin-bottom: 3rem;
+  }
+
+  #services .service:nth-child(3) .pixels-right .a{
+    width: 16rem;
+    height: 23rem;
+    left: -0.15rem;
+    top: 0.4rem;
+    z-index: 1;
+  }
+
+  #services .service:nth-child(3) .pixels-right .b{
+    width: 10rem;
+    height: 12rem;
+    left: 8.9rem;
+    top: 12.75rem;
+    z-index: 3;
+  }
+
+  #services .service:nth-child(3) .pixels-right .c{
+    width: 16rem;
+    height: 23rem;
+    left: 2.4rem;
+    top: 19.9rem;
+    z-index: 2;
+  }
+
 }
