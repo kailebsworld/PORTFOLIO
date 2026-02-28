@@ -103,7 +103,11 @@
   margin: 0;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
+}
+
+.works-overlay-title {
+  word-spacing: 0.22em;
 }
 
 .works-overlay-title,

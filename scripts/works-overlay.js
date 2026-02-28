@@ -169,6 +169,7 @@
   };
 
   const PROJECT_INDEX_BY_ID = new Map(PROJECTS.map((project, index) => [project.id, index]));
+  const WORK_EXPERIENCE_IDS = new Set(["project-1", "project-2"]);
   const LOADED_IMAGES = new Set();
   let pdfJsReadyPromise = null;
   let pdfRenderToken = 0;
@@ -196,6 +197,8 @@
   let worksMediaNext;
   let worksLink;
   let worksStrip;
+  let worksMoreLabel;
+  let worksHeadingProjectNodes;
 
   const pad = (value) => String(value).padStart(3, "0");
   const hashFromProjectId = (projectId) => `#work=${encodeURIComponent(projectId)}`;
@@ -538,6 +541,7 @@
   const renderProject = ({ animate = true } = {}) => {
     const project = PROJECTS[STATE.projectIndex];
     if (!project) return;
+    const isWorkExperience = WORK_EXPERIENCE_IDS.has(project.id);
 
     if (animate) worksPanel.classList.add("works-is-swapping");
 
@@ -549,6 +553,15 @@
     worksMeta.textContent = project.meta;
     worksDesc.textContent = project.description;
     setTags(project);
+    if (worksMoreLabel) {
+      worksMoreLabel.textContent = isWorkExperience ? "MORE WORKS" : "MORE PROJECTS";
+    }
+    if (worksHeadingProjectNodes?.length) {
+      const headingText = isWorkExperience ? "WORKS" : "PROJECT";
+      worksHeadingProjectNodes.forEach((node) => {
+        node.textContent = headingText;
+      });
+    }
 
     if (project.link) {
       worksLink.href = project.link;
@@ -768,6 +781,8 @@
     worksMediaNext = document.querySelector(".works-media-next");
     worksLink = document.querySelector(".works-link");
     worksStrip = document.querySelector(".works-strip");
+    worksMoreLabel = document.querySelector(".works-more-label");
+    worksHeadingProjectNodes = Array.from(document.querySelectorAll(".works-heading-project"));
 
     worksImage.addEventListener("error", () => {
       if (STATE.previewMode === "image" && worksImage.getAttribute("src")) {
