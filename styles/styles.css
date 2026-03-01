@@ -4,6 +4,9 @@
 :root{
   --bg: #ffffff;
   --fg: #0b0b0b;
+  --cursor-fill: #0b0b0b;
+  --cursor-big-fill: #0b0b0b;
+  --cursor-small-fill: #f7f8fa;
   --hero-overlay: rgba(255,255,255,0.55);
   --hero-shadow: rgba(0,0,0,0.12);
 
@@ -39,6 +42,9 @@
 [data-theme="dark"]{
   --bg: #000000;
   --fg: #ffffff;
+  --cursor-fill: #f7f8fa;
+  --cursor-big-fill: #f7f8fa;
+  --cursor-small-fill: #4a4a4a;
   --hero-overlay: rgba(0,0,0,0.55);
   --hero-shadow: rgba(0,0,0,0.55);
 }
@@ -76,12 +82,23 @@ body{
   position: fixed;
   top: 0;
   left: 0;
-  mix-blend-mode: difference;
   will-change: transform;
 }
 
-.cursor__ball circle{
-  fill: #f7f8fa;
+.cursor__ball--big{
+  mix-blend-mode: difference;
+}
+
+.cursor__ball--small{
+  mix-blend-mode: normal;
+}
+
+.cursor__ball--big circle{
+  fill: var(--cursor-big-fill);
+}
+
+.cursor__ball--small circle{
+  fill: var(--cursor-small-fill);
 }
 
 @media (hover: hover) and (pointer: fine){

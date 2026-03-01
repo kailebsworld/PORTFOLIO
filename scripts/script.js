@@ -224,6 +224,7 @@ const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)")
 const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const hoverSelector = "a, button, [role='button'], .photo-slot";
+const hoverScaleActive = 2.2;
 let cursorEnabled = false;
 let rafId = null;
 let cursorVisible = false;
@@ -257,7 +258,7 @@ const onPointerLeaveWindow = () => {
 
 const onPointerOver = (event) => {
   if (!event.target.closest(hoverSelector)) return;
-  hoverScale = 4;
+  hoverScale = hoverScaleActive;
 };
 
 const onPointerOut = (event) => {
