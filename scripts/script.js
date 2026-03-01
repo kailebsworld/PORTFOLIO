@@ -216,3 +216,127 @@ if (photoSlots.length) {
     slot.addEventListener("click", () => swapWithCenter(slot));
   });
 }
+
+const cursorRoot = document.querySelector(".cursor");
+const bigBall = document.querySelector(".cursor__ball--big");
+const smallBall = document.querySelector(".cursor__ball--small");
+const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+const hoverSelector = "a, button, [role='button'], .photo-slot";
+let cursorEnabled = false;
+let rafId = null;
+let cursorVisible = false;
+let hoverScale = 1;
+
+const pointer = {
+  x: window.innerWidth * 0.5,
+  y: window.innerHeight * 0.5
+};
+
+const big = { x: pointer.x, y: pointer.y };
+const small = { x: pointer.x, y: pointer.y };
+
+const shouldEnableCustomCursor = () => finePointerQuery.matches && !reduceMotionQuery.matches;
+
+const onPointerMove = (event) => {
+  pointer.x = event.clientX;
+  pointer.y = event.clientY;
+
+  if (!cursorVisible && cursorRoot) {
+    cursorVisible = true;
+    cursorRoot.classList.add("is-visible");
+  }
+};
+
+const onPointerLeaveWindow = () => {
+  if (!cursorRoot) return;
+  cursorVisible = false;
+  cursorRoot.classList.remove("is-visible");
+};
+
+const onPointerOver = (event) => {
+  if (!event.target.closest(hoverSelector)) return;
+  hoverScale = 4;
+};
+
+const onPointerOut = (event) => {
+  const currentHoverable = event.target.closest(hoverSelector);
+  if (!currentHoverable) return;
+
+  const nextHoverable = event.relatedTarget instanceof Element
+    ? event.relatedTarget.closest(hoverSelector)
+    : null;
+
+  if (nextHoverable === currentHoverable) return;
+  hoverScale = 1;
+};
+
+const renderCursor = () => {
+  big.x += (pointer.x - big.x) * 0.18;
+  big.y += (pointer.y - big.y) * 0.18;
+  small.x += (pointer.x - small.x) * 0.5;
+  small.y += (pointer.y - small.y) * 0.5;
+
+  if (bigBall) {
+    bigBall.style.transform = `translate3d(${big.x - 15}px, ${big.y - 15}px, 0) scale(${hoverScale})`;
+  }
+
+  if (smallBall) {
+    smallBall.style.transform = `translate3d(${small.x - 5}px, ${small.y - 5}px, 0)`;
+  }
+
+  rafId = window.requestAnimationFrame(renderCursor);
+};
+
+const enableCustomCursor = () => {
+  if (!cursorRoot || !bigBall || !smallBall || cursorEnabled) return;
+  cursorEnabled = true;
+  document.body.classList.add("has-custom-cursor");
+  document.addEventListener("pointermove", onPointerMove);
+  document.addEventListener("pointerover", onPointerOver);
+  document.addEventListener("pointerout", onPointerOut);
+  window.addEventListener("blur", onPointerLeaveWindow);
+  document.addEventListener("mouseleave", onPointerLeaveWindow);
+  if (!rafId) rafId = window.requestAnimationFrame(renderCursor);
+};
+
+const disableCustomCursor = () => {
+  if (!cursorEnabled) return;
+  cursorEnabled = false;
+  document.body.classList.remove("has-custom-cursor");
+  document.removeEventListener("pointermove", onPointerMove);
+  document.removeEventListener("pointerover", onPointerOver);
+  document.removeEventListener("pointerout", onPointerOut);
+  window.removeEventListener("blur", onPointerLeaveWindow);
+  document.removeEventListener("mouseleave", onPointerLeaveWindow);
+  hoverScale = 1;
+  cursorVisible = false;
+  if (cursorRoot) cursorRoot.classList.remove("is-visible");
+  if (rafId) {
+    window.cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+};
+
+const syncCustomCursorState = () => {
+  if (shouldEnableCustomCursor()) {
+    enableCustomCursor();
+  } else {
+    disableCustomCursor();
+  }
+};
+
+if (typeof finePointerQuery.addEventListener === "function") {
+  finePointerQuery.addEventListener("change", syncCustomCursorState);
+} else if (typeof finePointerQuery.addListener === "function") {
+  finePointerQuery.addListener(syncCustomCursorState);
+}
+
+if (typeof reduceMotionQuery.addEventListener === "function") {
+  reduceMotionQuery.addEventListener("change", syncCustomCursorState);
+} else if (typeof reduceMotionQuery.addListener === "function") {
+  reduceMotionQuery.addListener(syncCustomCursorState);
+}
+
+syncCustomCursorState();
